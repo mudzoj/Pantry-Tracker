@@ -1,6 +1,6 @@
 "use client"
 import { firestore } from '@/firebase'
-import {Box, Stack, Typography,Button,Modal,TextField} from '@mui/material'
+import {Box, Stack, Typography,Button,Modal,TextField,InputAdornment} from '@mui/material'
 import { update } from 'firebase/database'
 import { Firestore } from 'firebase/firestore'
 import { collection } from 'firebase/firestore'
@@ -26,6 +26,7 @@ const style = {
 
 export default function Home() {
   const [pantry, setPantry] = useState([])
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [open,setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -48,34 +49,38 @@ export default function Home() {
     updatePantry()
   }, [])
 
-const addItem = async(item) =>{
-  const docRef = doc(collection(firestore, 'pantry'),item)
-  const docSnap = await getDoc(docRef)
+  const addItem = async(item) =>{
+    const docRef = doc(collection(firestore, 'pantry'),item)
+    const docSnap = await getDoc(docRef)
 
-  if (docSnap.exists()) {
-    const {count} = docSnap.data()
-    await setDoc(docRef, {count: count + 1})
-  }else{
-    await setDoc(docRef, {count:1})  
-  }
-
-  await updatePantry()
-}
-
-const removeItem = async (item) => {
-  const docRef = doc(collection(firestore, 'pantry'), item)
-  const docSnap = await getDoc(docRef)
-  if (docSnap.exists()) {
-    const {count} = docSnap.data()
-    if (count === 1) {
-      await deleteDoc(docRef)
+    if (docSnap.exists()) {
+      const {count} = docSnap.data()
+      await setDoc(docRef, {count: count + 1})
     }else{
-      await setDoc(docRef, {count: count - 1})
+      await setDoc(docRef, {count:1})  
     }
+
+    await updatePantry()
   }
-  await updatePantry()
-  
-}
+
+  const removeItem = async (item) => {
+    const docRef = doc(collection(firestore, 'pantry'), item)
+    const docSnap = await getDoc(docRef)
+    if (docSnap.exists()) {
+      const {count} = docSnap.data()
+      if (count === 1) {
+        await deleteDoc(docRef)
+      }else{
+        await setDoc(docRef, {count: count - 1})
+      }
+    }
+    await updatePantry()
+  }
+
+  const filteredPantry = pantry.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <Box 
       width="100vw"
@@ -85,8 +90,9 @@ const removeItem = async (item) => {
       flexDirection = {'column'} 
       alignItems={'center'}
       gap={2}
-      
     > 
+    
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -121,6 +127,7 @@ const removeItem = async (item) => {
       <Button variant="contained" onClick={handleOpen}>
         Add
       </Button>
+
       <Box border={'1px solid #333'}>
         
         <Box
@@ -131,11 +138,24 @@ const removeItem = async (item) => {
           <Typography variant={'h2'} color={'#333'} textAlign={'center'}>
             Pantry Items
           </Typography>
-          
         </Box>
-      
+
+        <Box
+          width ="800px" 
+          height = "65px" 
+        >
+          <TextField
+              label="Search Items"
+              variant="outlined"
+              fullWidth
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search for an item..."
+            />
+        </Box>
+
         <Stack width = "800px" height="300px" spacing={2} overflow={'auto'}>
-          {pantry.map(({name, count}) =>(
+          {filteredPantry.map(({name, count}) =>(
             <Box
               key={name} 
               width="100%"
@@ -161,12 +181,8 @@ const removeItem = async (item) => {
           ))}
         </Stack>  
 
-
       </Box>
     </Box>
 
-
-  
-   
-)
+  )
 }
