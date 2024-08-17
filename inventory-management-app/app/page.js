@@ -1,6 +1,6 @@
 "use client"
 import { firestore } from '@/firebase'
-import {Box, Stack, Typography,Button,Modal,TextField,InputAdornment} from '@mui/material'
+import {Box, Stack, Typography,Button,Modal,TextField,InputAdornment, Container} from '@mui/material'
 import { update } from 'firebase/database'
 import { Firestore } from 'firebase/firestore'
 import { collection } from 'firebase/firestore'
@@ -81,8 +81,12 @@ export default function Home() {
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  return (
+  return ( 
+
+
+  
     <Box 
+      
       width="100vw"
       height="100vh"
       display={'flex'}
@@ -90,50 +94,18 @@ export default function Home() {
       flexDirection = {'column'} 
       alignItems={'center'}
       gap={2}
+      bgcolor= {'#e6f8ff'}
+      
+     
     > 
-    
 
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Add Item
-          </Typography>
-          <Stack width="100%" direction={'row'} spacing={2}>
-            <TextField 
-              id="outlined-basic" 
-              label="Add" 
-              variant="outlined" 
-              fullWidth
-              value = {itemName}
-              onChange={(e) => setItemName(e.target.value)}
-              ></TextField>
-            <Button variant="contained"
-              onClick={()=>{
-                addItem(itemName)
-                setItemName('')
-                handleClose()
-              }}
-
-            >Add</Button>
-          </Stack>
-        </Box>
-      </Modal>
-
-      <Button variant="contained" onClick={handleOpen}>
-        Add
-      </Button>
-
-      <Box border={'1px solid #333'}>
+      <Box border={'1px solid #333'}  >
         
         <Box
         width ="800px" 
         height = "100px" 
-        bgcolor = {'#ADD8E6'}
+        bgcolor = {'#400b01'}
+     
         >
           <Typography variant={'h2'} color={'#333'} textAlign={'center'}>
             Pantry Items
@@ -151,7 +123,27 @@ export default function Home() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search for an item..."
+
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        if (searchQuery.trim() !== "") {
+                          addItem(searchQuery);
+                        } else {
+                          console.log("Search query is empty. No item added.");
+                        }
+                      }}
+                    >Add
+                    </Button>
+                  </InputAdornment>
+                ),
+              }}
             />
+            
+            
         </Box>
 
         <Stack width = "800px" height="300px" spacing={2} overflow={'auto'}>
@@ -183,6 +175,7 @@ export default function Home() {
 
       </Box>
     </Box>
-
+  
+  
   )
 }
