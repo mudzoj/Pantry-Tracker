@@ -15,7 +15,7 @@ import { usePantry } from './hooks/usePantry'
 import FadeInSection from '/app/components/fadeBox'
 import ZoomInImage from '/app/components/zoomInImage'
 import ScrollToTopOnRefresh from './components/ScrolltoTopOnRefresh';
-
+import InfoCards from './components/infoCards';
 
 
 export default function Home() {
@@ -72,115 +72,9 @@ export default function Home() {
       >
         Your all-in-one tool for your favourite pantry staples!
       </Typography>
-
-
-      <Box
-        sx={{
-          marginTop: "50px",
-          display: "flex",
-          gap: { xs: "20px", sm: "50px", md: "100px", lg: "200px" },
-          justifyContent: "space-around",
-          alignItems: "center",
-          flexWrap: "wrap",
-
-        }}
-      >
-        <Grid container spacing={10} justifyContent="center" alignItems="stretch">
-          <Grid item xs={12} sm={4} md={3}>
-            <FadeInSection>
-              <Paper
-                elevation={3}
-                sx={{
-                  borderRadius: "20px",
-                  padding: "20px",
-                  textAlign: "center",
-                  backgroundColor: "#DCD7C9",
-                  minHeight: "300px",
-                }}
-              >
-                <img src="/images/grocery.png" alt="Pantry Aid" width="65px" />
-                <Box mt={1} sx={{ flexGrow: 1 }}>
-                  <FadeInSection>
-                    <Typography
-                      sx={{
-                        marginTop: '75px', // Adjust spacing from TopBar
-                        fontWeight: 'bold',
-                        color: '#2C3930'
-                      }}
-                    >
-                      Stay connected and keep track of what you need across devices, no matter where you are
-                    </Typography>
-                  </FadeInSection>
-                </Box>
-              </Paper>
-            </FadeInSection>
-          </Grid>
-
-          <Grid item xs={12} sm={4} md={3}>
-            <FadeInSection>
-              <Paper
-                elevation={3}
-                sx={{
-                  borderRadius: "20px",
-                  padding: "20px",
-                  textAlign: "center",
-                  backgroundColor: "#DCD7C9",
-                  minHeight: "300px",
-                }}
-              >
-                <img src="/images/fridge.png" alt="Pantry Aid" width="65px" />
-                <Box mt={1} sx={{ flexGrow: 1 }}>
-                  <FadeInSection>
-                    <Typography
-                      sx={{
-                        marginTop: '75px', // Adjust spacing from TopBar
-                        fontWeight: 'bold',
-                        color: '#2C3930'
-                      }}
-                    >
-                      Keep track of what you currently have, eliminating food waste by keeping track of expiration dates.
-                    </Typography>
-                  </FadeInSection>
-                </Box>
-
-              </Paper>
-            </FadeInSection>
-          </Grid>
-
-
-          <Grid item xs={12} sm={4} md={3}>
-            <FadeInSection>
-              <Paper
-                elevation={3}
-                sx={{
-                  borderRadius: "20px",
-                  padding: "20px",
-                  textAlign: "center",
-                  backgroundColor: "#DCD7C9",
-                  minHeight: "300px",
-                }}
-              >
-                <img src="/images/recipe.png" alt="Pantry Aid" width="65px" />
-                <Box mt={1} sx={{ flexGrow: 1 }}>
-                  <FadeInSection>
-                    <Typography
-                      sx={{
-                        marginTop: '75px', // Adjust spacing from TopBar
-                        fontWeight: 'bold',
-                        color: '#2C3930'
-                      }}
-                    >
-                      Out of ideas? The Pantry Aid comes with tools to provide delicious suggestions based on your pantry items.
-                    </Typography>
-                  </FadeInSection>
-                </Box>
-              </Paper>
-            </FadeInSection>
-          </Grid>
-
-        </Grid>
-      </Box>
-
+      
+  
+      <InfoCards></InfoCards>
       
       <ZoomInImage>
       </ZoomInImage>
