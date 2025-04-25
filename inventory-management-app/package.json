@@ -12,6 +12,7 @@
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^5.16.7",
+    "dotenv": "^16.4.7",
     "firebase": "^11.5.0",
     "framer-motion": "^12.5.0",
     "motion": "^12.5.0",
