@@ -13,6 +13,7 @@ const firebaseConfig = {
 
 // Debugging
 console.log("API Key:", process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+
 export const auth = getAuth(app);
 export default app;
