@@ -13,7 +13,7 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.16.7",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "firebase": "^11.5.0",
     "framer-motion": "^12.5.0",
     "motion": "^12.5.0",

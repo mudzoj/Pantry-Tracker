@@ -20,7 +20,11 @@ export const useAuth = () => {
     const handleGoogleSignIn = async () => {
         try {
             const provider = new GoogleAuthProvider();
-            await signInWithPopup(auth, provider);
+            try{
+                await signInWithPopup(auth, provider);
+            }catch(error){
+            }
+            
         } catch (error) {
             console.error("Google sign-in error:", error);
             throw error;
