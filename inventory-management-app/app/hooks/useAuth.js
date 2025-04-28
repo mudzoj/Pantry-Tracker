@@ -1,33 +1,38 @@
-"use client"
+"use client";
 import { useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { auth } from '../firebase/firebase';
+
+const provider = new GoogleAuthProvider();
 
 export const useAuth = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // useEffect(() => {
+    //     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+    //         setUser(currentUser);
+    //         setLoading(false);
+    //     });
+
+    //     return () => unsubscribe();
+    // }, []);
+
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((currentUser) => {
-            setUser(currentUser);
-            setLoading(false);
+        const unsubscribe = onAuthStateChanged(auth, user => {
+          setUser(user);
+          setLoading(false);
         });
-
-        return () => unsubscribe();
-    }, []);
-
+        return unsubscribe;
+      }, []);
+      
     const handleGoogleSignIn = async () => {
-        try {
-            const provider = new GoogleAuthProvider();
-            try{
-                await signInWithPopup(auth, provider);
-            }catch(error){
-            }
-            
-        } catch (error) {
-            console.error("Google sign-in error:", error);
-            throw error;
+
+        try{
+            await signInWithPopup(auth, provider);
+        }catch(error){
         }
+            
     };
 
     const handleSignOut = async () => {

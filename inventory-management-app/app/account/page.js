@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Box, Button, Typography, Paper } from '@mui/material';
 import { useAuth } from '../hooks/useAuth';
 import TopBar from '../components/topBar';

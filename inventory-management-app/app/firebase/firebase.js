@@ -1,8 +1,6 @@
+"use client";
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-
-require('dotenv').config()
-
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -14,9 +12,9 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-// Debugging
+// Debugging (remove in production)
 console.log("API Key:", process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 export const auth = getAuth(app);
 export default app;
