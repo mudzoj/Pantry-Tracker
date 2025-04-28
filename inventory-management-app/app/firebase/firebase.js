@@ -1,9 +1,8 @@
-import 'dotenv/config'
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 require('dotenv').config()
-console.log(process.env) // remove this after you've confirmed it is working
+
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,

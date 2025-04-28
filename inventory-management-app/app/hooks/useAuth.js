@@ -1,7 +1,6 @@
-// hooks/useAuth.js
 "use client"
 import { useState, useEffect } from 'react';
-import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { auth } from '../firebase/firebase';
 
 export const useAuth = () => {
