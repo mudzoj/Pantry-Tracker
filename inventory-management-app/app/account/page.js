@@ -1,16 +1,41 @@
 "use client";
 import { Box, Button, Typography, Paper } from '@mui/material';
-import { useAuth } from '../hooks/useAuth';
+import React, { useState, useEffect } from "react";
+import { UserAuth } from "../context/AuthContext";
 import TopBar from '../components/topBar';
 import ScrollToTopOnRefresh from '../components/ScrolltoTopOnRefresh';
+import { doc, setDoc } from "firebase/firestore"; 
+import { db } from '../firebase/firebase';
+
 
 export default function SignInPage() {
-    const {
-        user,
-        loading,
-        handleGoogleSignIn,
-        handleSignOut
-    } = useAuth();
+    const { user, googleSignIn, logOut } = UserAuth();
+    const [loading, setLoading] = useState(true);
+
+
+    const handleSignIn = async () => {
+        try {
+          await googleSignIn();       
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    
+      const handleSignOut = async () => {
+        try {
+          await logOut();
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    
+      useEffect(() => {
+        const checkAuthentication = async () => {
+          await new Promise((resolve) => setTimeout(resolve, 50));
+          setLoading(false);
+        };
+        checkAuthentication();
+      }, [user]);
 
     return (
         <Box
@@ -106,7 +131,7 @@ export default function SignInPage() {
 
 
                         <Box><Button variant="contained" size="large"
-                            onClick={handleGoogleSignIn}
+                            onClick={handleSignIn}
                             sx={{
 
                                 scale: "100%",
@@ -147,7 +172,7 @@ export default function SignInPage() {
                                         fontWeight: '',
                                         color: '#C5C1B4',
                                         textAlign: "center",
-                                        marginRight: "8px",
+                                        marginright: "8px",
                                         
                                         fontFamily: '"Exo 2", sans-serif', // Add quotes for multi-word fonts
                                         textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)'
@@ -155,7 +180,7 @@ export default function SignInPage() {
                                 >
                                     Powered by
                                 </Typography>
-                                <img src="/images/google.png" alt="Pantry Aid" width="15px" marginRight= "20px" />
+                                <img src="/images/google.png" alt="Pantry Aid" width="15px" marginright= "20px" />
                             </Box>
                             <Typography
                                 sx={{
@@ -174,7 +199,7 @@ export default function SignInPage() {
                                 Already have an account?
                             </Typography>
                             <Button variant="contained" size="large" disableElevation
-                                onClick={handleGoogleSignIn}
+                                onClick={handleSignIn}
                                 sx={{
 
                                     scale: "50%",

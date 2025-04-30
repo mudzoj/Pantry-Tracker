@@ -1,5 +1,5 @@
 "use client"
-import { firestore } from '@/firebase'
+import { firestore } from '../firebase/firebase'
 import {Grid,AppBar,Toolbar, IconButton, MenuIcon, Box, Stack, Typography,Button,Modal,TextField,InputAdornment, Container} from '@mui/material'
 import { styled } from '@mui/material/styles';
 import { update } from 'firebase/database'

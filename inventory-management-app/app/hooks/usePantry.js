@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { firestore } from '@/firebase';
+import { db } from '../firebase/firebase';
 import { collection, query, getDocs, doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 
 export function usePantry() {
   const [pantry, setPantry] = useState([]);
 
   const fetchPantry = async () => {
-    const q = query(collection(firestore, 'pantry'));
+    const q = query(collection(db, 'pantry'));
     const snapshot = await getDocs(q);
     const list = snapshot.docs.map(doc => ({ name: doc.id, ...doc.data() }));
     setPantry(list);
@@ -17,7 +17,7 @@ export function usePantry() {
   }, []);
 
   const addItem = async (item) => {
-    const docRef = doc(collection(firestore, 'pantry'), item);
+    const docRef = doc(collection(db, 'pantry'), item);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const { count } = docSnap.data();
@@ -29,7 +29,7 @@ export function usePantry() {
   };
 
   const removeItem = async (item) => {
-    const docRef = doc(collection(firestore, 'pantry'), item);
+    const docRef = doc(collection(db, 'pantry'), item);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const { count } = docSnap.data();

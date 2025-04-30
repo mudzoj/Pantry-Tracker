@@ -1,9 +1,9 @@
 "use client"
-import { firestore } from '@/firebase'
+import { firestore } from '../firebase/firebase'
 import {Grid,AppBar,Toolbar, IconButton, MenuIcon, Box, Stack, Typography,Button,Modal,TextField,InputAdornment, Container} from '@mui/material'
 import { styled } from '@mui/material/styles';
 import { update } from 'firebase/database'
-import { Firestore } from 'firebase/firestore'
+import { db } from 'firebase/firestore'
 import { collection } from 'firebase/firestore'
 import { query } from 'firebase/firestore'
 import { getDocs, doc, setDoc, deleteDoc, getDoc} from 'firebase/firestore'
@@ -12,6 +12,7 @@ import TopBar from '/app/components/topBar'
 import SearchBar from '/app/components/searchBar'
 import PantryGrid from "/app/components/pantryGrid"
 import { usePantry } from '../hooks/usePantry';
+
 
 
 
