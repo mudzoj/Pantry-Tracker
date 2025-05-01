@@ -12,7 +12,8 @@ import TopBar from '/app/components/topBar'
 import SearchBar from '/app/components/searchBar'
 import PantryGrid from "/app/components/pantryGrid"
 import { usePantry } from '../hooks/usePantry';
-
+import { UserAuth } from '../context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -20,6 +21,8 @@ import { usePantry } from '../hooks/usePantry';
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const { pantry, addItem, removeItem } = usePantry();
+  const {user} = UserAuth();
+  
 
   const [open,setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -31,7 +34,13 @@ export default function Home() {
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const router = useRouter();
 
+  useEffect(() => {
+    if (!user) {
+      router.push('/account');
+    }
+  }, []);
 
   return ( 
     <Box 

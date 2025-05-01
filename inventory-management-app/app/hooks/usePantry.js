@@ -1,42 +1,55 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase/firebase';
 import { collection, query, getDocs, doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
+import { UserAuth } from "../context/AuthContext";
 
 export function usePantry() {
   const [pantry, setPantry] = useState([]);
-
+  const {user} = UserAuth();
+  
   const fetchPantry = async () => {
-    const q = query(collection(db, 'pantry'));
-    const snapshot = await getDocs(q);
-    const list = snapshot.docs.map(doc => ({ name: doc.id, ...doc.data() }));
-    setPantry(list);
+    if (!user) return;
+
+    const pantryRef = collection(db, 'users', user.uid, 'pantry');
+    const pantrySnap = await getDocs(pantryRef);
+  
+    const pantryList = pantrySnap.docs.map(doc => ({
+      name: doc.id,
+      ...doc.data(),
+    }));
+    console.log(pantryList)
+    setPantry(pantryList);
   };
+
 
   useEffect(() => {
     fetchPantry();
-  }, []);
+  }, [user]);
 
   const addItem = async (item) => {
-    const docRef = doc(collection(db, 'pantry'), item);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const { count } = docSnap.data();
-      await setDoc(docRef, { count: count + 1 });
-    } else {
-      await setDoc(docRef, { count: 1 });
-    }
-    await fetchPantry();
-  };
+  if (!user) return;
+
+  const itemRef = doc(db, 'users', user.uid, 'pantry', item);
+  const itemSnap = await getDoc(itemRef);
+
+  if (itemSnap.exists()) {
+    const { count } = itemSnap.data();
+    await setDoc(itemRef, { count: count + 1 });
+  } else {
+    await setDoc(itemRef, { count: 1 });
+  }
+  fetchPantry();
+};
 
   const removeItem = async (item) => {
-    const docRef = doc(collection(db, 'pantry'), item);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const { count } = docSnap.data();
+    const itemRef = doc(db, 'users', user.uid, 'pantry', item);
+    const itemSnap = await getDoc(itemRef);
+    if (itemSnap.exists()) {
+      const { count } = itemSnap.data();
       if (count === 1) {
-        await deleteDoc(docRef);
+        await deleteDoc(itemRef);
       } else {
-        await setDoc(docRef, { count: count - 1 });
+        await setDoc(itemRef, { count: count - 1 });
       }
     }
     await fetchPantry();

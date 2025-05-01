@@ -19,20 +19,8 @@ export const AuthContextProvider = ({ children }) => {
     const provider = new GoogleAuthProvider();
     const result = await signInWithPopup(auth, provider);
     
-    //Creating Firestore Pantry collection for logged in user
-    const userDocRef = doc(db, 'users', result.user.uid);
-    const userDocSnap = await getDoc(userDocRef);
-    oi
-    if (!userDocSnap.exists()) {
-      // Create the document with an empty pantry
-      await setDoc(userDocRef, { pantry: {} });
-    } else {
-      const userData = userDocSnap.data();
-      if (!userData.hasOwnProperty('pantry')) {
-        // Add the pantry field without affecting other data
-        await setDoc(userDocRef, { pantry: {} }, { merge: true });
-      }
-    }
+    const userPantry = doc(db, 'users', result.user.uid);
+    setDoc(userPantry, {}, { merge: true });
     
   };
 
