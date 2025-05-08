@@ -26,6 +26,7 @@ import OtherIcon from '/app/components/icons/other.svg';
 import AlphabeticalIcon from '/app/components/icons/alphabetical.svg';
 import AddIcon from '/app/components/icons/add.svg';
 
+
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [foodGroup, setFoodGroup] = useState('');
@@ -54,21 +55,25 @@ export default function Home() {
   
   const foodGroupName = selectedIconItem?.name || "All";
  
+
   const filteredPantry = pantry.filter(function(item) {
-    if (foodGroupName === "All") {
-      return item.name.toLowerCase().includes(searchQuery.toLowerCase());
-    } else if (foodGroupName === "Alphabetical") {
-      return item.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+
+    if (!matchesSearch) return false;
+
+    if (foodGroupName === "All" || foodGroupName === "Alphabetical") {
+      return true;
     } else {
-      console.log(foodGroupName, item.group);
       return item.group === foodGroupName;
     }
-  }).sort(function(a, b) {
+  })
+  .sort(function(a, b) {
     if (foodGroupName === "Alphabetical") {
-      return a.name.localeCompare(b.name); // Sorting alphabetically (A-Z)
+      return a.name.localeCompare(b.name); // A-Z sorting
     }
-    return 0; // No sorting for other categories
+    return 0; // No sorting otherwise
   });
+
 
   //redirect user if not logged in
   const router = useRouter();
