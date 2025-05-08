@@ -1,6 +1,6 @@
 "use client"
 import { firestore } from '../firebase/firebase'
-import {Grid,AppBar,Toolbar, IconButton, MenuIcon, Box, Stack, Typography,Button,Modal,TextField,InputAdornment, Container} from '@mui/material'
+import {Grid,AppBar, Paper, SvgIcon, Toolbar, IconButton, MenuIcon, Box, Stack, Typography,Button,Modal,TextField,InputAdornment, Container, ClickAwayListener} from '@mui/material'
 import { styled } from '@mui/material/styles';
 import { update } from 'firebase/database'
 import { db } from 'firebase/firestore'
@@ -14,28 +14,64 @@ import PantryGrid from "/app/components/pantryGrid"
 import { usePantry } from '../hooks/usePantry';
 import { UserAuth } from '../context/AuthContext';
 import { useRouter } from 'next/navigation';
+import IconList from '../components/pantryIcons';
+import { FilterStatus } from '../components/pantryIcons';
+import EntryBox from  '/app/components/entryBox'
 
-
-
+import MeatIcon from '/app/components/icons/meat.svg';
+import DairyIcon from '/app/components/icons/dairy.svg';
+import GrainIcon from '/app/components/icons/grains.svg';
+import ProduceIcon from '/app/components/icons/produce.svg';
+import OtherIcon from '/app/components/icons/other.svg';
+import AlphabeticalIcon from '/app/components/icons/alphabetical.svg';
+import AddIcon from '/app/components/icons/add.svg';
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [foodGroup, setFoodGroup] = useState('');
+  const [date, setDate] = useState('')
+  const [amount, setAmount] = useState('')
+  const [unit, setUnit] = useState('')
+
+  const [hoveredId, setHoveredId] = useState(null);
+  const [clickedId, setClickedId] = useState(null);
+
+  const iconItems = [
+    { id: 1, name: "Protein", icon: MeatIcon },
+    { id: 2, name: "Dairy", icon: DairyIcon },
+    { id: 3, name: "Grain", icon: GrainIcon },
+    { id: 4, name: "Produce", icon: ProduceIcon },
+    { id: 5, name: "Other", icon: OtherIcon },
+    { id: 6, name: "Alphabetical", icon: AlphabeticalIcon }, 
+  
+  ];
   const { pantry, addItem, removeItem } = usePantry();
   const {user} = UserAuth();
+ 
+  const selectedIconItem = iconItems.find(function(item) {
+    return item.id === clickedId;
+  });
   
+  const foodGroupName = selectedIconItem?.name || "All";
+ 
+  const filteredPantry = pantry.filter(function(item) {
+    if (foodGroupName === "All") {
+      return item.name.toLowerCase().includes(searchQuery.toLowerCase());
+    } else if (foodGroupName === "Alphabetical") {
+      return item.name.toLowerCase().includes(searchQuery.toLowerCase());
+    } else {
+      console.log(foodGroupName, item.group);
+      return item.group === foodGroupName;
+    }
+  }).sort(function(a, b) {
+    if (foodGroupName === "Alphabetical") {
+      return a.name.localeCompare(b.name); // Sorting alphabetically (A-Z)
+    }
+    return 0; // No sorting for other categories
+  });
 
-  const [open,setOpen] = useState(false)
-  const handleOpen = () => setOpen(true)
-  const handleClose =() => setOpen(false)
-
-  const [itemName, setItemName] = useState('')
-
-  const filteredPantry = pantry.filter(item =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
+  //redirect user if not logged in
   const router = useRouter();
-
   useEffect(() => {
     if (!user) {
       router.push('/account');
@@ -53,24 +89,53 @@ export default function Home() {
       alignItems: "center", // Centers items horizontally
       justifyContent: "center", // Centers items vertically rgb(220, 215, 201)
       background: 'radial-gradient(ellipse at 50% 100%, hsl(30, 4.50%, 8.60%), hsl(139, 11%, 28%))',
-
-
     }}
-     
     > 
-    <TopBar></TopBar>
 
-
-
-    <Box sx={{marginTop:"400px"}}></Box>
+      <TopBar></TopBar>
+      <Box sx={{marginTop:"200px"}}></Box>
     
-
-    <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} addItem={addItem} />
-
-    <PantryGrid filteredPantry={filteredPantry} removeItem={removeItem} />
+      <Paper
+        elevation={4} // Controls shadow depth (1–24)
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "80%",
+          margin: "0 auto",
+          padding: 2, // Adds inner spacing
+          borderRadius: 4, // Fillets the corners
+          background: 'radial-gradient(ellipse at 50% 100%, hsl(30, 4.50%, 8.60%), hsl(139, 11%, 28%))',
+        }}
+      >
+        <Box  
+          sx={{          
+            display: "flex",
+            flexDirection: "row",         // horizontal layout
+            alignItems: "center",         // vertically align them
+            justifyContent: "space-between", // optional: space between them
+            width: '100%',
+            pl: 2,
+            height: 'calc(8vh + 0px)', // Full height minus the AppBar height
+            }}> 
+          
    
+          <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+                     foodGroup= {foodGroup} setFoodGroup = {setFoodGroup} 
+                     date= {date} setDate= {setDate}
+                     amount = {amount} setAmount = {setAmount}
+                     unit = {unit} setUnit = {setUnit}
+                     addItem={addItem} />
+          <IconList hoveredId={hoveredId} setHoveredId={setHoveredId}
+                    clickedId={clickedId} setClickedId={setClickedId}
+                    >
+                    
+          </IconList>
 
+        </Box>
 
+        <PantryGrid filteredPantry={filteredPantry} removeItem={removeItem}  />
+      </Paper>
 
 
     {/* AI HEADER SECTION*/}

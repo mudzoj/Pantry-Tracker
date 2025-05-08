@@ -1,72 +1,113 @@
-import { TextField, Button, InputAdornment, Box } from '@mui/material';
+import { TextField, Button, InputAdornment, Box, Dialog, DialogTitle, SvgIcon } from '@mui/material';
+import { useEffect, useState } from 'react'
+import EntryBox from './entryBox';
 
-const SearchBar = ({ searchQuery, setSearchQuery, addItem }) => {
+
+import AddIcon from '/app/components/icons/add.svg';
+import { color } from 'framer-motion';
+
+const SearchBar = ({ searchQuery, setSearchQuery, foodGroup, setFoodGroup,
+    date, setDate, amount, setAmount, unit, setUnit,
+    addItem }) => {
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+        setSearchQuery("")
+    };
+
+    const handleClose = (value) => {
+        setOpen(false);
+        setFoodGroup("")
+        setDate("")
+        setAmount("")
+        setUnit("")
+
+    };
 
     return (
         <Box
             sx={{
-                position: 'sticky',
+                // position: 'sticky',
                 display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: 'calc(10vh - 80px)', // Full height minus the AppBar height
+                flexDirection: 'row',
+                // alignItems: 'center',
+                justifyContent: "left",
 
+                marginLeft: "5%"
             }}
         >
             <TextField
-                label="Search"
+
+                variant="outlined"
                 fullWidth
                 inputProps={{ maxLength: 14 }}
+                size="small"
                 sx={{
-                    maxWidth: '600px', // Adjust the width as needed
-                    backgroundColor: '#e8eaf6', // Background color of the search field
-                    '& .MuiInputBase-root': {
-                        color: '#333', // Text color within the search field
-                    },
+                    backgroundColor: '#2C3930', // Background color of the search field
+                    maxWidth: "300px",
+                    borderRadius: 2,
                     '& .MuiInputLabel-root': {
-                        color: '#333', // Color of the label text
+                        color: '#9A968C', // Color of Label
+                        fontSize: "18px",
+                        marginLeft: "8px",
+                        transform: 'translateY(40%)',
+                    },
+                    '& .MuiInputBase-root': {
+                        color: '#DCD7C9', // Text color within the search field
+                        borderRadius: 2,
+                        // height: { xs: '30px',  sm: '15px', md: '40px',  lg: '35px'},
                     },
                     '& .MuiOutlinedInput-root': {
+                        borderRadius: 2,
+                        color: '#DCD7C9',
                         '& fieldset': {
-                            borderColor: '#9fa8da', // Border color
+                            borderColor: '#1E2721', // default
                         },
                         '&:hover fieldset': {
-                            borderColor: '#388e3c', // Border color on hover
+                            borderColor: '#AFABA0', // hover
                         },
                         '&.Mui-focused fieldset': {
-                            borderColor: '#2e7d32', // Border color when focused
+                            borderColor: '#C0BCB2', // focused — override the blue
                         },
                     },
                 }}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for an item..."
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <Button
-                                variant="contained"
-                                onClick={() => {
-                                    if (searchQuery.trim() !== "") {
-                                        addItem(searchQuery);
-                                    } else {
-                                        console.log("Search query is empty. No item added.");
-                                    }
-                                }}
-                                sx={{
-                                    backgroundColor: '#31473A', // Button color
-                                    '&:hover': {
-                                        backgroundColor: '#388e3c', // Button color on hover
-                                    },
-                                }}
-                            >
-                                Add
-                            </Button>
-                        </InputAdornment>
-                    ),
+                placeholder="Search Your Pantry"
+
+
+
+
+            />
+
+            <SvgIcon
+                component={AddIcon}
+                onClick={handleClickOpen}
+                sx={{
+                    "&:hover": {
+                        color: "#617467", // Change to your desired hover color
+                    },
+                    color: "#DCD7C9",
+                    cursor: "pointer",
+                    fontSize: 32,
+                    marginLeft: "8px",
+                    marginTop: "5px"
                 }}
             />
+
+            <EntryBox
+                searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+                foodGroup={foodGroup} setFoodGroup={setFoodGroup}
+                addItem={addItem}
+                date={date} setDate={setDate}
+                amount={amount} setAmount={setAmount}
+                unit={unit} setUnit={setUnit}
+                open={open}
+                onClose={handleClose}
+            ></EntryBox>
+
+
         </Box >
     );
 };

@@ -32,7 +32,7 @@ const PantryGrid = ({ filteredPantry, removeItem }) => {
         boxSizing: 'border-box',
         pt: "25px",
         fontWeight: 'bold',       // Make the font bold
-        color: '#31473A',       // Set the font color to white 
+        color: '#2C3930',       // Set the font color to white 
         letterSpacing: 2,         // Add some letter spacing
         fontFamily: 'Roboto',     // Use a specific font family
         marginTop: '75px',  // Move text down by 10px
@@ -52,7 +52,7 @@ const PantryGrid = ({ filteredPantry, removeItem }) => {
                                 alignItems: "center",
                                 justifyContent: "center",
                                 padding: 2,
-                                backgroundColor: "#F1F7F5",
+                                backgroundColor: "#2C3930",
                                 "&:hover": {
                                     backgroundColor: "#F6FAF9",
                                 },

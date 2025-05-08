@@ -65,7 +65,7 @@ const TopBar = () => {
             onMouseUp={() => setIsClicked(false)}
             sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
           >
-            <img 
+            <img
               src={isClicked ? "/images/pantry_aid_clicked.png" : isHovered ? "/images/pantry_aid_clicked.png" : "/images/pantry_aid.png"} 
               alt="Pantry Aid" 
               width="65px"

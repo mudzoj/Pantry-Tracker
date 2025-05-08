@@ -17,7 +17,7 @@ export function usePantry() {
       name: doc.id,
       ...doc.data(),
     }));
-    console.log(pantryList)
+    // console.log(pantryList)
     setPantry(pantryList);
   };
 
@@ -26,18 +26,14 @@ export function usePantry() {
     fetchPantry();
   }, [user]);
 
-  const addItem = async (item) => {
+  const addItem = async (item, foodGroup, amount, unit, date) => {
   if (!user) return;
 
+  console.log("output")
+  console.log(amount, date, unit, date)
   const itemRef = doc(db, 'users', user.uid, 'pantry', item);
-  const itemSnap = await getDoc(itemRef);
+  await setDoc(itemRef, {group: foodGroup,  expiry:date, unit: unit, amount: amount});
 
-  if (itemSnap.exists()) {
-    const { count } = itemSnap.data();
-    await setDoc(itemRef, { count: count + 1 });
-  } else {
-    await setDoc(itemRef, { count: 1 });
-  }
   fetchPantry();
 };
 
@@ -46,11 +42,7 @@ export function usePantry() {
     const itemSnap = await getDoc(itemRef);
     if (itemSnap.exists()) {
       const { count } = itemSnap.data();
-      if (count === 1) {
-        await deleteDoc(itemRef);
-      } else {
-        await setDoc(itemRef, { count: count - 1 });
-      }
+      await deleteDoc(itemRef);
     }
     await fetchPantry();
   };
