@@ -44,7 +44,7 @@ const SearchBar = ({ searchQuery, setSearchQuery, foodGroup, setFoodGroup,
                 inputProps={{ maxLength: 14 }}
                 size="small"
                 sx={{
-                    backgroundColor: '#2C3930', // Background color of the search field
+                    backgroundColor: '#3F4F44', // Background color of the search field
                     maxWidth: "300px",
                     borderRadius: 2,
                     '& .MuiInputLabel-root': {

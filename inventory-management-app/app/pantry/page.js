@@ -1,6 +1,6 @@
 "use client"
 import { firestore } from '../firebase/firebase'
-import {Grid,AppBar, Paper, SvgIcon, Toolbar, IconButton, MenuIcon, Box, Stack, Typography,Button,Modal,TextField,InputAdornment, Container, ClickAwayListener} from '@mui/material'
+import {Grid,AppBar, Paper, SvgIcon, Toolbar, IconButton, useMediaQuery, useTheme, MenuIcon, Box, Stack, Typography,Button,Modal,TextField,InputAdornment, Container, ClickAwayListener} from '@mui/material'
 import { styled } from '@mui/material/styles';
 import { update } from 'firebase/database'
 import { db } from 'firebase/firestore'
@@ -48,6 +48,14 @@ export default function Home() {
   ];
   const { pantry, addItem, removeItem } = usePantry();
   const {user} = UserAuth();
+
+      const theme = useTheme();
+      const isXs = useMediaQuery(theme.breakpoints.only('xs'));
+      const isSm = useMediaQuery(theme.breakpoints.only('sm'));
+      const isMd = useMediaQuery(theme.breakpoints.only('md'));
+      const isLg = useMediaQuery(theme.breakpoints.only('lg'));
+      const isXl = useMediaQuery(theme.breakpoints.only('xl'));
+
  
   const selectedIconItem = iconItems.find(function(item) {
     return item.id === clickedId;
@@ -86,14 +94,15 @@ export default function Home() {
   return ( 
     <Box 
     sx={{
-      bgcolor: "#DCD7C9",
+      bgcolor: "#DCD7C9]",
       minHeight: "100vh",
       textAlign: "center",
       display: "flex",
       flexDirection: "column", // Ensures vertical stacking
       alignItems: "center", // Centers items horizontally
       justifyContent: "center", // Centers items vertically rgb(220, 215, 201)
-      background: 'radial-gradient(ellipse at 50% 100%, hsl(30, 4.50%, 8.60%), hsl(139, 11%, 28%))',
+      backgroundColor:"#2C3930"
+      // background: 'radial-gradient(ellipse at 50% 100%, hsl(30, 4.50%, 8.60%), hsl(139, 11%, 28%))',
     }}
     > 
 
@@ -106,11 +115,14 @@ export default function Home() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          justifyContent: "center",
           width: "80%",
           margin: "0 auto",
           padding: 2, // Adds inner spacing
           borderRadius: 4, // Fillets the corners
-          background: 'radial-gradient(ellipse at 50% 100%, hsl(30, 4.50%, 8.60%), hsl(139, 11%, 28%))',
+          backgroundColor:"#27322A",
+          
+          // background: 'radial-gradient(ellipse at 50% 100%, hsl(30, 4.50%, 8.60%), hsl(139, 11%, 28%))',
         }}
       >
         <Box  
@@ -139,7 +151,14 @@ export default function Home() {
 
         </Box>
 
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}>
         <PantryGrid filteredPantry={filteredPantry} removeItem={removeItem}  />
+        </Box>
       </Paper>
 
 
