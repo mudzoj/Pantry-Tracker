@@ -42,9 +42,24 @@ export function IconList({hoveredId, setHoveredId, clickedId, setClickedId}) {
     if (hoveredId === id) return "#AFABA0";
     return "gray";
   };
-
+// e213
   return (
-    <Box style={{ display: "flex", gap: "1rem"}}>
+    <Box 
+      sx={{ 
+        display: "flex",
+        
+        flexDirection: "row",         // horizontal layout
+        alignItems: "center",         // vertically align them
+        // flexWrap: "wrap",
+        alignItems:"center",
+        justifyContent:"center",
+        marginTop:{xs:"20px", sm:"25px", md:"25px", lg:"0px" },
+        marginLeft:{sm:"0px", md:"10px", lg:"25px", xl:"0px"},
+        gap: {xs:"2rem", sm:"3rem", md:"3rem", lg:"2rem"},
+       
+        // marginRight: "20px",
+
+    }}>
       {iconItems.map((item) => (
         <SvgIcon
           key={item.id}
@@ -55,7 +70,7 @@ export function IconList({hoveredId, setHoveredId, clickedId, setClickedId}) {
           style={{
             color: getColor(item.id),
             cursor: "pointer",
-            fontSize: 24,
+            fontSize: 28,
           }}
         />
       ))}

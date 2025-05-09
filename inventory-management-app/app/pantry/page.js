@@ -130,13 +130,15 @@ export default function Home() {
             display: "flex",
             flexDirection: "row",         // horizontal layout
             alignItems: "center",         // vertically align them
-            justifyContent: "space-between", // optional: space between them
+            flexWrap: "wrap",
+            justifyContent: "center", // optional: space between them
             width: '100%',
             pl: 2,
             height: 'calc(8vh + 0px)', // Full height minus the AppBar height
             }}> 
           
    
+          
           <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
                      foodGroup= {foodGroup} setFoodGroup = {setFoodGroup} 
                      date= {date} setDate= {setDate}

@@ -32,20 +32,22 @@ const SearchBar = ({ searchQuery, setSearchQuery, foodGroup, setFoodGroup,
                 display: 'flex',
                 flexDirection: 'row',
                 // alignItems: 'center',
+                // flexWrap: 'wrap',
                 justifyContent: "left",
-
-                marginLeft: "5%"
+                width: {xs:"95%", sm:"95%", md:"80%", lg:"55%", xl:"65%"},
+                marginLeft: "1%"
             }}
         >
             <TextField
 
                 variant="outlined"
                 fullWidth
+            
                 inputProps={{ maxLength: 14 }}
                 size="small"
                 sx={{
                     backgroundColor: '#3F4F44', // Background color of the search field
-                    maxWidth: "300px",
+                    width: "600px",
                     borderRadius: 2,
                     '& .MuiInputLabel-root': {
                         color: '#9A968C', // Color of Label
