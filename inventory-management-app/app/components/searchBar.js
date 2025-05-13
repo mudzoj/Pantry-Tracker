@@ -7,9 +7,10 @@ import AddIcon from '/app/components/icons/add.svg';
 import { color } from 'framer-motion';
 
 const SearchBar = ({ searchQuery, setSearchQuery, foodGroup, setFoodGroup,
-    date, setDate, amount, setAmount, unit, setUnit,
-    addItem }) => {
-    const [open, setOpen] = useState(false);
+    date, setDate, amount, setAmount, unit, setUnit, open, setOpen, edit, setEdit,
+    day, setDay, month, setMonth, year, setYear,
+    addItem,}) => {
+   
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -46,7 +47,7 @@ const SearchBar = ({ searchQuery, setSearchQuery, foodGroup, setFoodGroup,
                 inputProps={{ maxLength: 14 }}
                 size="small"
                 sx={{
-                    backgroundColor: '#3F4F44', // Background color of the search field
+                    backgroundColor: "#202922", // Background color of the search field
                     width: "600px",
                     borderRadius: 2,
                     '& .MuiInputLabel-root': {
@@ -107,6 +108,10 @@ const SearchBar = ({ searchQuery, setSearchQuery, foodGroup, setFoodGroup,
                 unit={unit} setUnit={setUnit}
                 open={open}
                 onClose={handleClose}
+                edit={edit} setEdit={setEdit}
+                day={day} setDay={setDay}
+                month={month} setMonth={setMonth}
+                year={year} setYear={setYear}
             ></EntryBox>
 
 

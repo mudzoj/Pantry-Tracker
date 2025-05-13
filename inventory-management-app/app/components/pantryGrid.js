@@ -1,9 +1,9 @@
 import React from "react";
 import { Grid, Box, Typography, Button, SvgIcon, useTheme, useMediaQuery, } from "@mui/material";
 import { styled } from '@mui/material/styles';
-
+import EntryBox from "./entryBox";
 import RemoveIcon from '/app/components/icons/remove.svg';
-const PantryGrid = ({ filteredPantry, removeItem }) => {
+const PantryGrid = ({ filteredPantry, removeItem, open, setOpen, edit, setEdit, fetchPantryItemData}) => {
 
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.only('xs'));
@@ -22,8 +22,9 @@ const PantryGrid = ({ filteredPantry, removeItem }) => {
     else if (isLg) charLimit = 22;
     else if (isXl) charLimit = 19;
 
-    console.log(isXs, isSm, isMd, isLg)
+  
 
+   
 
     const ScrollContainer = styled(Box)(({ theme }) => ({
         display: 'flex',
@@ -60,17 +61,23 @@ const PantryGrid = ({ filteredPantry, removeItem }) => {
             }}>
 
             < ScrollContainer sx={{ width: '100%', maxWidth: '1200px', padding: '10px' }}>
-                <Grid container columnSpacing={1} rowSpacing={2} justifyContent="center">
+                <Grid container columnSpacing={1} rowSpacing={2} justifyContent="flex-start">
                     {filteredPantry.map(({ name, count }) => (
                         <Grid item xs={12} sm={12} md={6} lg={4} xl={3} key={name}>
                             <Box
+                                onClick={() => {
+                                    
+                                    setOpen(true);
+                                    setEdit(true);
+                                    fetchPantryItemData(name)}}
                                 sx={{
                                     display: "flex",
                                     flexDirection: "column",
                                     alignItems: "center",
                                     justifyContent: "center",
                                     // padding: 2,
-                                    backgroundColor: "#3F4F44",
+                                    backgroundColor: "#202922",
+                                    
                                     // background: 'radial-gradient(ellipse at 50% 50%, #2C3930, #3C4C41)',
                                     "&:hover": {
                                         background: 'radial-gradient(ellipse at 50% 50%,  #3C4C41, #4E6054)',
@@ -88,12 +95,17 @@ const PantryGrid = ({ filteredPantry, removeItem }) => {
                                     sx={{ position: "absolute", top: 8, left: 8, }}>
                                     <SvgIcon
                                         component={RemoveIcon}
-                                        onClick={() => removeItem(name)}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            removeItem(name)
+                                        
+
+                                        }}
                                         sx={{
                                             "&:hover": {
                                                 color: "#9E1A1A", // Change to your desired hover color
                                             },
-                                            color: "#111613",
+                                            color: "#CDD7D0",
                                             cursor: "pointer",
                                             fontSize: 18,
 
@@ -102,7 +114,7 @@ const PantryGrid = ({ filteredPantry, removeItem }) => {
                                     />
                                 </Box>
 
-                                <Typography variant="h7" color="#1A221C"
+                                <Typography variant="h7" color="#CDD7D0"
                                     sx={{
                                         marginTop: 3, marginBottom: 1,
                                         fontSize: {

@@ -47,5 +47,13 @@ export function usePantry() {
     await fetchPantry();
   };
 
-  return { pantry, addItem, removeItem };
+  const fetchPantryItem = async (itemId) => {
+        const itemRef = doc(db, 'users', user.uid, 'pantry', itemId);
+        const itemSnap = await getDoc(itemRef);
+        if (itemSnap.exists()) {
+          return itemSnap.data();
+        }
+        return null;
+  }
+  return { pantry, addItem, removeItem, fetchPantryItem };
 }

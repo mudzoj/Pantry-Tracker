@@ -4,15 +4,14 @@ import { useEffect, useState } from 'react'
 
 export default function EntryBox({ onClose, selectedValue, open, searchQuery,
                                    setSearchQuery, foodGroup, setFoodGroup, 
-                                   date, setDate, amount, setAmount, unit, setUnit,
-                                   addItem }) {
+                                   setDate, amount, setAmount, unit, setUnit,
+                                   addItem, edit, setEdit, day, setDay, month, setMonth,
+                                   year, setYear}) {
 
   const groups = ["Protein", "Produce", "Grain", "Dairy", "Other"]
   const amounts = ["items", "g", "kg", "mL", "L", "cup"]
 
-  const [day, setDay] = useState('');
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
+
 
   const [errors, setErrors] = useState({
     day: false,
@@ -73,6 +72,9 @@ export default function EntryBox({ onClose, selectedValue, open, searchQuery,
       onClose={handleClose}
       open={open}
       onKeyDown={handleKeyDown}
+      TransitionProps={{
+        onExited: ()=> setEdit(false)
+      }}
       PaperProps={{ sx: { width: "75vw", } }}>
       <Box
         backgroundColor="#DCD7C9"
@@ -93,6 +95,7 @@ export default function EntryBox({ onClose, selectedValue, open, searchQuery,
             label="Pantry Item"
             placeholder="Chicken Breast"
             value={searchQuery}
+            InputProps={{readOnly: edit? true: false}}
             onChange={(e) => setSearchQuery(e.target.value)}
             error={errors.searchQuery}
             helperText={errors.searchQuery ? "Enter an Item" : ""}
@@ -249,7 +252,7 @@ export default function EntryBox({ onClose, selectedValue, open, searchQuery,
             },
           }}
         >
-          Add
+          {edit ? 'Save' : 'Add'}
         </Button>
         </Box>
           

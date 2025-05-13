@@ -28,11 +28,17 @@ import AddIcon from '/app/components/icons/add.svg';
 
 
 export default function Home() {
+
   const [searchQuery, setSearchQuery] = useState('');
   const [foodGroup, setFoodGroup] = useState('');
   const [date, setDate] = useState('')
   const [amount, setAmount] = useState('')
   const [unit, setUnit] = useState('')
+  const [day, setDay] = useState('');
+  const [month, setMonth] = useState('');
+  const [year, setYear] = useState('');
+  const [open, setOpen] = useState(false);
+  const [edit, setEdit] = useState(false);
 
   const [hoveredId, setHoveredId] = useState(null);
   const [clickedId, setClickedId] = useState(null);
@@ -46,7 +52,7 @@ export default function Home() {
     { id: 6, name: "Alphabetical", icon: AlphabeticalIcon }, 
   
   ];
-  const { pantry, addItem, removeItem } = usePantry();
+  const { pantry, addItem, removeItem, fetchPantryItem} = usePantry();
   const {user} = UserAuth();
 
       const theme = useTheme();
@@ -91,6 +97,22 @@ export default function Home() {
     }
   }, []);
 
+  const fetchPantryItemData = async (itemId) => {
+      const data = await fetchPantryItem(itemId);
+
+      if (data) {
+          setSearchQuery(itemId);
+          setFoodGroup(data.group)
+          setAmount(data.amount);
+          setUnit(data.unit)
+          setDay(data.expiry.slice(0,2))
+          setMonth(data.expiry.slice(3,5))
+          setYear(data.expiry.slice(-4))
+          
+      }
+
+      };
+
   return ( 
     <Box 
     sx={{
@@ -118,6 +140,7 @@ export default function Home() {
           justifyContent: "center",
           width: "80%",
           margin: "0 auto",
+          boxShadow: 'inset 0 4px 8px rgba(0,0,0,0.3)',
           padding: 2, // Adds inner spacing
           borderRadius: 4, // Fillets the corners
           backgroundColor:"#27322A",
@@ -144,7 +167,12 @@ export default function Home() {
                      date= {date} setDate= {setDate}
                      amount = {amount} setAmount = {setAmount}
                      unit = {unit} setUnit = {setUnit}
-                     addItem={addItem} />
+                     addItem={addItem}
+                     open={open} setOpen={setOpen}
+                     edit={edit} setEdit={setEdit}
+                     day={day} setDay={setDay}
+                     month={month} setMonth={setMonth}
+                     year={year} setYear={setYear} />
           <IconList hoveredId={hoveredId} setHoveredId={setHoveredId}
                     clickedId={clickedId} setClickedId={setClickedId}
                     >
@@ -159,7 +187,18 @@ export default function Home() {
             display: "flex",
             justifyContent: "center",
           }}>
-        <PantryGrid filteredPantry={filteredPantry} removeItem={removeItem}  />
+        <PantryGrid filteredPantry={filteredPantry} removeItem={removeItem} 
+                     open={open} setOpen={setOpen}
+                     edit={edit} setEdit={setEdit}
+
+                     searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+                     foodGroup= {foodGroup} setFoodGroup = {setFoodGroup} 
+                     amount = {amount} setAmount = {setAmount}
+                     unit = {unit} setUnit = {setUnit}
+                     day={day} setDay={setDay}
+                     month={month} setMonth={setMonth}
+                     year={year} setYear={setYear} 
+                     fetchPantryItemData={fetchPantryItemData} />
         </Box>
       </Paper>
 
@@ -213,7 +252,7 @@ export default function Home() {
        sx={{
         display: 'grid',            
         placeItems: 'center',     
-        width: '100vw',            
+              
         }}
       >
         <Button variant="contained" 
@@ -235,20 +274,7 @@ export default function Home() {
       </Box>
 
 
-      <Box
-        sx={{
-          top: 80, 
-          display: 'flex',
-          flexDirection: 'column-reverse', 
-          alignItems: 'center', 
-          height: 'calc(50vh - 80px)', 
-          overflow: 'auto', 
-          border: '1px solid #ddd', 
-          padding: 2 
-        }}
-      >
-
-      </Box>
+   
 
     </Box>
   
