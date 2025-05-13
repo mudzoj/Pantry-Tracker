@@ -157,7 +157,7 @@ export default function Home() {
             justifyContent: "center", // optional: space between them
             width: '100%',
             pl: 2,
-            height: 'calc(8vh + 0px)', // Full height minus the AppBar height
+            // height: 'calc(8vh + 0px)', // Full height minus the AppBar height
             }}> 
           
    
