@@ -62,7 +62,7 @@ export default function Home() {
       const isLg = useMediaQuery(theme.breakpoints.only('lg'));
       const isXl = useMediaQuery(theme.breakpoints.only('xl'));
 
- 
+  
   const selectedIconItem = iconItems.find(function(item) {
     return item.id === clickedId;
   });

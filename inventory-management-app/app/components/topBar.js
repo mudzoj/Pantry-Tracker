@@ -9,6 +9,7 @@ import { styled, alpha } from '@mui/material/styles'; // Import styled and alpha
 import { useTheme } from "@mui/material/styles";
 import { useMediaQuery } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
+import { useLoading } from "../context/LoadingContext";
 
 
 
@@ -29,15 +30,20 @@ const TopBar = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md")); // Detects if screen is small (mobile)
-  const handleClick = (destination) => {
-    router.push(destination);
-  };
+
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+
+  const { setLoading } = useLoading();
+
+  const handleClick = (destination) => {
+    setLoading(true);
+    router.push(destination);
   };
 
   return (

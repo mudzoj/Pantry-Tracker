@@ -38,7 +38,7 @@ export function IconList({hoveredId, setHoveredId, clickedId, setClickedId}) {
   };
 
   const getColor = (id) => {
-    if (clickedId === id) return "#DCD7C9";
+    if (clickedId === id) return "#617467";
     if (hoveredId === id) return "#AFABA0";
     return "#FBFBF9";
   };

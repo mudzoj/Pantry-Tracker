@@ -3,7 +3,7 @@ import { Grid, Box, Typography, Button, SvgIcon, useTheme, useMediaQuery, } from
 import { styled } from '@mui/material/styles';
 import EntryBox from "./entryBox";
 import RemoveIcon from '/app/components/icons/remove.svg';
-const PantryGrid = ({ filteredPantry, removeItem, open, setOpen, edit, setEdit, fetchPantryItemData}) => {
+export default function PantryGrid ({ filteredPantry, removeItem, open, setOpen, edit, setEdit, fetchPantryItemData})  {
 
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.only('xs'));
@@ -137,4 +137,3 @@ const PantryGrid = ({ filteredPantry, removeItem, open, setOpen, edit, setEdit, 
     );
 };
 
-export default PantryGrid;
