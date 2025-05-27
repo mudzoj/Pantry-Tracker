@@ -4,7 +4,7 @@ import React from "react";
 import { AppBar, Button, Typography, Toolbar, Box, IconButton,Menu,MenuItem } from '@mui/material';
 import { useRouter } from 'next/navigation'; 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { styled, alpha } from '@mui/material/styles'; // Import styled and alpha
 import { useTheme } from "@mui/material/styles";
 import { useMediaQuery } from "@mui/material";
@@ -41,10 +41,11 @@ const TopBar = () => {
 
   const { setLoading } = useLoading();
 
-  const handleClick = (destination) => {
-    setLoading(true);
-    router.push(destination);
-  };
+// components/TopBar.js (update handleClick)
+const handleClick = (destination) => {
+  setLoading(true);
+  router.push(destination);
+};
 
   return (
     <StyledAppBar 

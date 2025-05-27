@@ -7,7 +7,7 @@ const LoadingScreen = () => {
 
   if (!loading) return null;
 
-  return (
+    return(
     <Box
       sx={{
         position: "fixed",
