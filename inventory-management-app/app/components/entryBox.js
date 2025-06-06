@@ -75,18 +75,21 @@ export default function EntryBox({ onClose, selectedValue, open, searchQuery,
       TransitionProps={{
         onExited: ()=> setEdit(false)
       }}
-      PaperProps={{ sx: { width: "75vw", } }}>
+      PaperProps={{ sx: { width: "75vw", backgroundColor: 'transparent' } }}>
       <Box
-        backgroundColor="#DCD7C9"
-        sx={{
+         sx={{
+          backgroundColor: "#2C3930",
+          borderRadius: 4, // or '12px'
+          boxShadow:10,
+          overflow: "hidden", // this ensures children don't spill over the rounded edges
           display: 'flex',
           flexDirection: 'column',
-          // alignItems: 'center',
-          justifyContent: "center",
-        }}
+          justifyContent: 'center',
+          color: "#CDD7D0",
+  }}
       >
 
-        <DialogTitle>Add to your Pantry</DialogTitle>
+        <DialogTitle sx={{display:"flex", justifyContent:"center", textShadow: "2px 2px 4px rgba(0, 0, 0, 1.0)",}}>Add to your Pantry</DialogTitle>
         <Box sx={{ display: "flex", alignItems: 'center', gap: 2 }}>
           <TextField
 
@@ -95,22 +98,28 @@ export default function EntryBox({ onClose, selectedValue, open, searchQuery,
             label="Pantry Item"
             placeholder="Chicken Breast"
             value={searchQuery}
-            InputProps={{readOnly: edit? true: false}}
+            InputLabelProps={{sx:{color: '#9A968C', 
+                              '&.MuiInputLabel-shrink': {
+                                color: '#CDD7D0', 
+                              },
+                            }}}
+            InputProps={{readOnly: edit? true: false, sx:{color: '#9A968C'}}}
             onChange={(e) => setSearchQuery(e.target.value)}
             error={errors.searchQuery}
             helperText={errors.searchQuery ? "Enter an Item" : ""}
-            sx={{ width: "60%", marginLeft: "10px" }}
+            sx={{ width: "60%", marginLeft: "10px", backgroundColor:"#202922",  borderRadius: 1.5  }}
           />
           <TextField
             id="outlined-required"
             select
             size="small"
             label="Food Group"
-            InputLabelProps={{ shrink: true }}
+            InputLabelProps={{ shrink: true, sx:{color:"#CDD7D0"} }}
+            InputProps={{sx:{color: '#9A968C'}}}
             defaultValue="Protein"
             error={errors.foodGroup}
             helperText={errors.foodGroup ? "Select a Food Group" : ""}
-            sx={{ width: "30%" }}
+            sx={{ width: "30%", backgroundColor: "#202922",  borderRadius: 1.5 }}
             value={foodGroup}
             onChange={(e) => setFoodGroup(e.target.value)}
           >
@@ -147,20 +156,21 @@ export default function EntryBox({ onClose, selectedValue, open, searchQuery,
               size="small"
               type="text"
               value={amount}
-              InputLabelProps={{ shrink: true }}
-              inputProps={{ maxLength: 6, inputMode: "numeric", pattern: "[0-9]*" }}
+              InputLabelProps={{ shrink: true, sx:{color:"#CDD7D0"}}}
+              inputProps={{ maxLength: 6, inputMode: "numeric", pattern: "[0-9]*", sx:{color: '#9A968C'}}}
               onChange={(e) => setAmount(e.target.value.replace(/\D/g, ''))}
-              sx={{ width: "20%", marginLeft: "10px" }}
+              sx={{ width: "20%", marginLeft: "10px", backgroundColor:"#202922",  borderRadius: 1.5 }}
             />
 
             <TextField
               id="outlined-required"
-              InputLabelProps={{ shrink: true }}
               select
               size="small"
               label="Units"
               defaultValue="g"
-              sx={{ width: "15%" }}
+              sx={{ width: "15%", backgroundColor:"#202922",  borderRadius: 1.5 }}
+              InputLabelProps={{ shrink: true, sx:{color:"#CDD7D0"}}}
+              InputProps={{sx:{color: '#9A968C'}}}
               value={unit}
               onChange={(e) => setUnit(e.target.value)}
               
@@ -185,15 +195,15 @@ export default function EntryBox({ onClose, selectedValue, open, searchQuery,
               size="small"
               placeholder="Expiry"
               type="text"
-              InputLabelProps={{ shrink: true }}
-              inputProps={{ maxLength: 2, inputMode: "numeric", pattern: "[0-9]*" }}
+              InputLabelProps={{ shrink: true, sx:{color:"#CDD7D0"}}}
+              inputProps={{ maxLength: 2, inputMode: "numeric", pattern: "[0-9]*", sx:{color: '#9A968C'}}}
               value={day}
               error={errors.day}
               helperText={errors.day ? "Invalid Day" : ""}
               onChange={(e) => setDay(e.target.value.replace(/\D/g, ''))} // Optional: auto-remove non-digits
               // value={searchQuery}
               // onChange={(e) => setSearchQuery(e.target.value)}
-              sx={{ width: "15%", marginLeft: "10px" }}
+              sx={{ width: "15%", marginLeft: "10px", backgroundColor:"#202922",  borderRadius: 1.5 }}
             />
 
 
@@ -203,13 +213,13 @@ export default function EntryBox({ onClose, selectedValue, open, searchQuery,
               label="Month"
               size="small"
               type="text"
-              InputLabelProps={{ shrink: true }}
-              inputProps={{ maxLength: 2, inputMode: "numeric", pattern: "[0-9]*" }}
+              InputLabelProps={{ shrink: true, sx:{color:"#CDD7D0"}}}
+              inputProps={{ maxLength: 2, inputMode: "numeric", pattern: "[0-9]*", sx:{color: '#9A968C'} }}
               value={month}
               onChange={(e) => setMonth(e.target.value.replace(/\D/g, ''))}
               error={errors.month}
               helperText={errors.month ? "Invalid Month" : ""}
-              sx={{ width: "15%", marginLeft: "10px" }}
+              sx={{ width: "15%", marginLeft: "10px", backgroundColor:"#202922",  borderRadius: 1.5 }}
             />
             <TextField
 
@@ -217,13 +227,13 @@ export default function EntryBox({ onClose, selectedValue, open, searchQuery,
               label="Year"
               size="small"
               type="text"
-              InputLabelProps={{ shrink: true }}
-              inputProps={{ maxLength: 4, inputMode: "numeric", pattern: "[0-9]*" }}
+              InputLabelProps={{ shrink: true, sx:{color:"#CDD7D0"}}}
+              inputProps={{ maxLength: 4, inputMode: "numeric", pattern: "[0-9]*", sx:{color: '#9A968C'} }}
               value={year}
               onChange={(e) => setYear(e.target.value.replace(/\D/g, ''))}
               error={errors.year}
               helperText={errors.year ? "Invalid Year" : ""}
-              sx={{ width: "20%", marginLeft: "10px" }}
+              sx={{ width: "20%", marginLeft: "10px", backgroundColor:"#202922",  borderRadius: 1.5 }}
             />
 
           </Box>

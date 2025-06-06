@@ -11,7 +11,7 @@ export default function ClientLayout({ children }) {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Reset loading when route changes complete
+  
     setLoading(false);
   }, [pathname, searchParams, setLoading]);
 

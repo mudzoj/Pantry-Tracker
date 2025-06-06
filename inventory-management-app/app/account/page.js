@@ -40,13 +40,16 @@ export default function SignInPage() {
     return (
         <Box
             sx={{
-                bgcolor: "#DCD7C9",
-                minHeight: "100vh",
-                textAlign: "center",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                background: 'radial-gradient(ellipse at 50% 100%, hsl(30, 4.50%, 8.60%), hsl(139, 11%, 28%))',
+             bgcolor: "#DCD7C9]",
+      minHeight: "100vh",
+      textAlign: "center",
+      display: "flex",
+      flexDirection: "column", // Ensures vertical stacking
+      alignItems: "center", // Centers items horizontally
+      justifyContent: "center", // Centers items vertically rgb(220, 215, 201)
+      backgroundColor:"#2C3930"
+
+    
 
 
             }}
@@ -59,7 +62,23 @@ export default function SignInPage() {
             ) : user ? (
                 //User is logged in
                 
-                <Box>
+                        <Box
+            sx={{
+             bgcolor: "#DCD7C9]",
+      minHeight: "100vh",
+      textAlign: "center",
+      display: "flex",
+      flexDirection: "column", // Ensures vertical stacking
+      alignItems: "center", // Centers items horizontally
+      justifyContent: "center", // Centers items vertically rgb(220, 215, 201)
+      backgroundColor:"#2C3930"
+
+    
+
+
+            }}
+        >
+          
                     <Typography
                         variant="h4"
                         sx={{
@@ -113,7 +132,7 @@ export default function SignInPage() {
                     </Typography>
 
                     <Paper
-                        elevation={16}
+                        elevation={20}
                         sx={{
                             width: { xs: "66.66vw", sm: "66.66vw", md: "50vw", lg: "33.33vw" },
                             background: "#2C3930",
@@ -125,6 +144,7 @@ export default function SignInPage() {
                             justifyContent: "center",
                             margin: "50px auto",
                             borderRadius: "32px",
+                            background: 'radial-gradient(ellipse at 50% 50%,  #3C4C41, #2C3930)'
                         }}
                     >
                         <img src="/images/account.png" alt="Pantry Aid" width="65px" />
@@ -132,8 +152,9 @@ export default function SignInPage() {
 
                         <Box><Button variant="contained" size="large"
                             onClick={handleSignIn}
+                            elevation={20}
                             sx={{
-
+                                
                                 scale: "100%",
                                 marginTop: "25px",
                                 backgroundColor: '#3F4F44', // Your custom color
@@ -180,8 +201,19 @@ export default function SignInPage() {
                                 >
                                     Powered by
                                 </Typography>
-                                <img src="/images/google.png" alt="Pantry Aid" width="15px" marginright= "20px" />
+
+                                
                             </Box>
+                             <Box
+                            sx={{  display: "flex", // Enables flexbox
+                                flexDirection: "row", // Ensures items are in a row
+                                alignItems: "center", // Vertically aligns items
+                                marginTop: "10px",
+                                justifyContent: "center",
+                               
+                                }}>
+                                <img src="/images/google.png" alt="Pantry Aid" width="20px" marginright= "20px" />
+                                </Box>
                             <Typography
                                 sx={{
                                     fontSize: { xs: "10px", sm: "10px", md: "12px", lg: "12px" },
@@ -191,7 +223,7 @@ export default function SignInPage() {
                                     fontWeight: '',
                                     color: '#C5C1B4',
                                     textAlign: "center",
-                                    marginTop: "40px",
+                                    marginTop: "20px",
                                     fontFamily: '"Exo 2", sans-serif', // Add quotes for multi-word fonts
                                     textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)'
                                 }}

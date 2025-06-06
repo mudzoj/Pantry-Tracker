@@ -8,10 +8,20 @@ import FadeInSection from '/app/components/fadeBox'
 import ZoomInImage from '/app/components/zoomInImage'
 import ScrollToTopOnRefresh from './components/ScrolltoTopOnRefresh';
 import InfoCards from './components/infoCards';
-
-
+import { UserAuth } from './context/AuthContext';
+import { useRouter } from 'next/navigation'; 
+import { useLoading } from "./context/LoadingContext";
+import Link from 'next/link';
 
 export default function Home() {
+
+
+  const router = useRouter();
+  const handleClick = async (destination) => {
+
+   router.push(destination);
+   
+  };
 
   return (
 
@@ -69,7 +79,8 @@ export default function Home() {
 
 
       <FadeInSection>
-        <Box><Button variant="contained" size="large" disableElevation
+        <Box><Button  variant="contained" size="large" disableElevation
+          
           sx={{
 
             scale: "150%",
@@ -96,7 +107,7 @@ export default function Home() {
       </FadeInSection>
 
 
-      <Box sx={{ height: '200px' }}>
+      <Box  sx={{ height: '200px' }}>
       </Box>
 
 

@@ -13,7 +13,7 @@ import { useLoading } from "../context/LoadingContext";
 
 
 
-const pages = ['pantry', 'about', 'account'];
+const pages = ['pantry', 'account'];
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backdropFilter: 'blur(24px)',  // Glass effect
   backgroundColor: alpha("#3C4C41", 0.7), // Semi-transparent
@@ -41,14 +41,23 @@ const TopBar = () => {
 
   const { setLoading } = useLoading();
 
-// components/TopBar.js (update handleClick)
-const handleClick = (destination) => {
-  setLoading(true);
-  router.push(destination);
+const handleClick = async (destination) => {
+  const currentPath = window.location.pathname;
+  
+  if (destination !== currentPath) {
+    setLoading(true);
+  }
+  
+  try {
+    await router.push(destination);
+  } catch (error) {
+    setLoading(false);
+  }
 };
 
   return (
     <StyledAppBar 
+  elevation={20}
   position="static" 
   variant="outlined" 
   sx={{ 
@@ -58,7 +67,9 @@ const handleClick = (destination) => {
     borderRadius: 2,
     display: 'flex', 
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+  background: 'radial-gradient(ellipse at 0% 50%, #202922,#323E35)',
+
   }}
 >
 <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', maxWidth: '1200px', px: 4 }}>
@@ -84,7 +95,7 @@ const handleClick = (destination) => {
                 color: isClicked ? '#DCD7C9' : isHovered ? "#DCD7C9" : "#DCD7C9",
                 letterSpacing: 2,
                 fontFamily: 'Roboto',
-                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' ,
+                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' ,
                 mt: 1
               }}
             >
@@ -135,7 +146,7 @@ const handleClick = (destination) => {
         <>
         {/* Right section: Buttons */}
         <Box sx={{ display: 'flex', gap: 3 }}>
-          {['PANTRY', 'ABOUT', 'ACCOUNT'].map((text, index) => (
+          {['PANTRY', 'ACCOUNT'].map((text, index) => (
             <Button 
               key={index}
               variant="text"

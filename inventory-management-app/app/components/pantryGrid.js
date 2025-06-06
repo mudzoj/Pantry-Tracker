@@ -58,6 +58,7 @@ export default function PantryGrid ({ filteredPantry, removeItem, open, setOpen,
                 letterSpacing: 2,
                 fontFamily: 'Roboto',
                 marginTop: '50px',
+                
             }}>
 
             < ScrollContainer sx={{ width: '100%', maxWidth: '1200px', padding: '10px' }}>
@@ -77,8 +78,10 @@ export default function PantryGrid ({ filteredPantry, removeItem, open, setOpen,
                                     justifyContent: "center",
                                     // padding: 2,
                                     backgroundColor: "#202922",
+                                    boxShadow: 'inset 0 4px 8px rgba(0,0,0,0.1)',
                                     
-                                    // background: 'radial-gradient(ellipse at 50% 50%, #2C3930, #3C4C41)',
+                                    
+                                    background: 'radial-gradient(ellipse at 50% 50%, #2C3930, #202922)',
                                     "&:hover": {
                                         background: 'radial-gradient(ellipse at 50% 50%,  #3C4C41, #4E6054)',
                                     },
