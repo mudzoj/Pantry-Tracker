@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthContext";
 import TopBar from '../components/topBar';
 import ScrollToTopOnRefresh from '../components/ScrolltoTopOnRefresh';
-import { doc, setDoc } from "firebase/firestore"; 
+import { doc, setDoc } from "firebase/firestore";
 import { db } from '../firebase/firebase';
 
 
@@ -15,41 +15,41 @@ export default function SignInPage() {
 
     const handleSignIn = async () => {
         try {
-          await googleSignIn();       
+            await googleSignIn();
         } catch (error) {
-          console.log(error);
+            console.log(error);
         }
-      };
-    
-      const handleSignOut = async () => {
+    };
+
+    const handleSignOut = async () => {
         try {
-          await logOut();
+            await logOut();
         } catch (error) {
-          console.log(error);
+            console.log(error);
         }
-      };
-    
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         const checkAuthentication = async () => {
-          await new Promise((resolve) => setTimeout(resolve, 50));
-          setLoading(false);
+            await new Promise((resolve) => setTimeout(resolve, 50));
+            setLoading(false);
         };
         checkAuthentication();
-      }, [user]);
+    }, [user]);
 
     return (
         <Box
             sx={{
-             bgcolor: "#DCD7C9]",
-      minHeight: "100vh",
-      textAlign: "center",
-      display: "flex",
-      flexDirection: "column", // Ensures vertical stacking
-      alignItems: "center", // Centers items horizontally
-      justifyContent: "center", // Centers items vertically rgb(220, 215, 201)
-      backgroundColor:"#2C3930"
+                bgcolor: "#DCD7C9]",
+                minHeight: "50vh",
+                textAlign: "center",
+                display: "flex",
+                flexDirection: "column", // Ensures vertical stacking
+                alignItems: "center", // Centers items horizontally
+                justifyContent: "center", // Centers items vertically rgb(220, 215, 201)
+                backgroundColor: "#2C3930"
 
-    
+
 
 
             }}
@@ -61,28 +61,28 @@ export default function SignInPage() {
                 <Typography>Loading...</Typography>
             ) : user ? (
                 //User is logged in
-                
-                        <Box
-            sx={{
-             bgcolor: "#DCD7C9]",
-      minHeight: "100vh",
-      textAlign: "center",
-      display: "flex",
-      flexDirection: "column", // Ensures vertical stacking
-      alignItems: "center", // Centers items horizontally
-      justifyContent: "center", // Centers items vertically rgb(220, 215, 201)
-      backgroundColor:"#2C3930"
 
-    
+                <Box
+                    sx={{
+                        marginTop:"200px",
+                        bgcolor: "#DCD7C9]",
+                        minHeight: "100vh",
+                        textAlign: "center",
+                        display: "flex",
+                        flexDirection: "column", // Ensures vertical stacking
+                        alignItems: "center", // Centers items horizontally
+                        backgroundColor: "#2C3930",
 
 
-            }}
-        >
-          
+
+
+                    }}
+                >
+
                     <Typography
                         variant="h4"
                         sx={{
-                            marginTop: '250px',
+                            marginTop: '0px',
                             fontWeight: 'bold',
                             color: '#C5C1B4',
                             fontFamily: '"Exo 2", sans-serif', // Add quotes for multi-word fonts
@@ -154,7 +154,7 @@ export default function SignInPage() {
                             onClick={handleSignIn}
                             elevation={20}
                             sx={{
-                                
+
                                 scale: "100%",
                                 marginTop: "25px",
                                 backgroundColor: '#3F4F44', // Your custom color
@@ -179,12 +179,13 @@ export default function SignInPage() {
 
                         </Button>
                             <Box
-                            sx={{  display: "flex", // Enables flexbox
-                                flexDirection: "row", // Ensures items are in a row
-                                alignItems: "center", // Vertically aligns items
-                                marginTop: "10px",
-                                justifyContent: "center",
-                               
+                                sx={{
+                                    display: "flex", // Enables flexbox
+                                    flexDirection: "row", // Ensures items are in a row
+                                    alignItems: "center", // Vertically aligns items
+                                    marginTop: "10px",
+                                    justifyContent: "center",
+
                                 }}>
                                 <Typography
                                     sx={{
@@ -194,7 +195,7 @@ export default function SignInPage() {
                                         color: '#C5C1B4',
                                         textAlign: "center",
                                         marginright: "8px",
-                                        
+
                                         fontFamily: '"Exo 2", sans-serif', // Add quotes for multi-word fonts
                                         textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)'
                                     }}
@@ -202,18 +203,19 @@ export default function SignInPage() {
                                     Powered by
                                 </Typography>
 
-                                
+
                             </Box>
-                             <Box
-                            sx={{  display: "flex", // Enables flexbox
-                                flexDirection: "row", // Ensures items are in a row
-                                alignItems: "center", // Vertically aligns items
-                                marginTop: "10px",
-                                justifyContent: "center",
-                               
+                            <Box
+                                sx={{
+                                    display: "flex", // Enables flexbox
+                                    flexDirection: "row", // Ensures items are in a row
+                                    alignItems: "center", // Vertically aligns items
+                                    marginTop: "10px",
+                                    justifyContent: "center",
+
                                 }}>
-                                <img src="/images/google.png" alt="Pantry Aid" width="20px" marginright= "20px" />
-                                </Box>
+                                <img src="/images/google.png" alt="Pantry Aid" width="20px" marginright="20px" />
+                            </Box>
                             <Typography
                                 sx={{
                                     fontSize: { xs: "10px", sm: "10px", md: "12px", lg: "12px" },
