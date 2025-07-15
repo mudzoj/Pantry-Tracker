@@ -18,14 +18,14 @@ const cards = [
     title: 'Reduce Waste',
     description: 'Keep track of what you have, eliminating food waste by monitoring expiration dates.',
     delay: 0.0,
-    scrollAmount: 700,
+    scrollAmount: 600,
   },
   {
     imgSrc: '/images/recipe.png',
     title: 'Recipe Ideas',
     description: 'Out of ideas? Get delicious recipe suggestions based on your pantry items.',
     delay: 0.0,
-    scrollAmount: 1000,
+    scrollAmount: 900,
   },
 ];
 
@@ -44,6 +44,8 @@ const InfoCards = () => {
         width: '100%',
       }}
     >
+
+
       {cards.map((card, index) => (
         <FadeInSection key={index} delay={card.delay} scrollThreshold={card.scrollAmount}>
           <Box

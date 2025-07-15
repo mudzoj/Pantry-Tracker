@@ -59,7 +59,7 @@ export default function Home() {
         Meet the AI powered Pantry Assistant.
       </Typography>
 
-      <FadeInSection delay={0}>
+      <FadeInSection delay={0} scrollThreshold={100}>
         <Typography
           variant="h7"
           sx={{
@@ -76,39 +76,58 @@ export default function Home() {
           Your all-in-one tool for your favourite pantry staples!
         </Typography>
       </FadeInSection>
-      
+
 
       <InfoCards />
 
-    
-
-      <ZoomInImage />
-
-      <FadeInSection delay={2.0}>
-        <Box>
+      <FadeInSection delay={0.5} scrollThreshold={900}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            mt: '50px', // Moved marginTop from Button to Box for better control
+          }}
+        >
           <Button
             variant="contained"
             size="large"
-            disableElevation
-            onClick={() => handleClick('/pantry')} // Add destination
+            
+            onClick={() => handleClick('/pantry')}
             sx={{
-              scale: '150%',
-              marginTop: '50px',
-              backgroundColor: '#3F4F44',
-              color: 'white',
-              width: '20vw', // Changed from '20wh' to '20vw'
-              height: '5vh',
+              minWidth: { xs: '200px', sm: '250px', md: '300px' }, // Responsive width
+              maxWidth: '400px',
+              height: { xs: '48px', sm: '56px', md: '64px' }, // Taller button
+              padding: { xs: '8px 16px', sm: '12px 24px' }, // Better padding
+              background: 'linear-gradient(135deg, #2c3930 0%, #3f4f44 50%, #4a5b4e 100%)', // Match InfoCards
+              color: '#DCD7C9',
+              borderRadius: '32px', // Rounded corners like InfoCards
+              boxShadow: '0 4px 12px rgba(63, 79, 68, 0.3)', // Subtle shadow
+              transition: 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s, background 0.5s',
               '&:hover': {
-                backgroundColor: '#202822',
+                background: 'linear-gradient(135deg, #3f4f44 0%, #4a5b4e 50%, #5c6f5b 100%)', // Lighter gradient
+                boxShadow: '0 8px 24px rgba(63, 79, 68, 0.5), 0 0 12px rgba(220, 215, 201, 0.3)', // Glow effect
+                transform: 'scale(1.05)', // Subtle scale on hover
+              },
+              '&:focus': {
+                outline: '2px solid #C5C1B4', // Accessible focus ring
+                outlineOffset: '4px',
+                boxShadow: '0 4px 12px rgba(63, 79, 68, 0.3), 0 0 8px rgba(220, 215, 201, 0.5)',
+              },
+              '&:active': {
+                transform: 'scale(0.98)', // Slight press effect
               },
             }}
           >
             <Typography
               sx={{
-                color: '#DCD7C9',
+                fontSize: { xs: '16px', sm: '18px', md: '20px', lg: '22px' }, // Responsive font
                 fontWeight: 'bold',
+                color: '#DCD7C9',
                 fontFamily: '"Exo 2", sans-serif',
-                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
+                textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)', // Softer shadow
+                letterSpacing: '0.5px',
               }}
             >
               Get Started
@@ -117,7 +136,7 @@ export default function Home() {
         </Box>
       </FadeInSection>
 
-      <Box sx={{ height: '200px' }} />
+      <Box sx={{ height: '300px' }} />
     </Box>
   );
 }
