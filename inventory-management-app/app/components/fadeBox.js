@@ -1,54 +1,44 @@
-import { useEffect, useState, useRef } from 'react';
-import { Box } from '@mui/material';
+'use client';
 
-const FadeInSelection = ({ 
-  children, 
-  threshold = 0.4,       // Trigger when 20% visible
-  fadeOutThreshold = 0.4,// Fade out when less than 10% visible
-  rootMargin = '-100px',    // No early trigger by default
-}) => {
+import React, { useRef, useEffect, useState } from 'react';
+
+const FadeInSection = ({ children, scrollThreshold = 100, delay = 0 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const domRef = useRef();
+  const hasTriggered = useRef(false); // Prevent repeated triggers
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        // Fade IN when crossing the higher threshold
-        if (entry.intersectionRatio >= threshold) {
-          setIsVisible(true);
-        } 
-        // Fade OUT when below the lower threshold (scrolling up)
-        else if (entry.intersectionRatio < fadeOutThreshold) {
-          setIsVisible(false);
-        }
-      },
-      { 
-        threshold: [fadeOutThreshold, threshold], // Track both thresholds
-        rootMargin 
+    const handleScroll = () => {
+      if (!hasTriggered.current && window.scrollY >= scrollThreshold) {
+        setIsVisible(true);
+        hasTriggered.current = true; // Mark as triggered
       }
-    );
-
-    const currentRef = domRef.current;
-    if (currentRef) observer.observe(currentRef);
-
-    return () => {
-      if (currentRef) observer.unobserve(currentRef);
     };
-  }, [threshold, fadeOutThreshold, rootMargin]);
+
+    // Trigger immediately if scrollThreshold is 0 (fade-in on any scroll)
+    if (scrollThreshold === 0 && !hasTriggered.current) {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+    } else if (!hasTriggered.current) {
+      // Trigger after reaching scrollThreshold
+      window.addEventListener('scroll', handleScroll, { passive: true });
+    }
+
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrollThreshold]);
 
   return (
-    <Box
-      ref={domRef}
-      sx={{
+    <div
+      style={{
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-        transition: 'opacity 1.6s ease, transform 1.0s ease',
-        willChange: 'opacity, transform'
+        transition: `opacity 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
       }}
     >
       {children}
-    </Box>
+    </div>
   );
 };
 
-export default FadeInSelection;
+export default FadeInSection;

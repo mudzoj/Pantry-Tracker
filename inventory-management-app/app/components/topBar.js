@@ -70,7 +70,7 @@ const TopBar = () => {
       sx={{
         mt: "20px",
         mx: "auto",
-        width: "80%",
+        width: "60%",
         borderRadius: 5,
         display: "flex",
         justifyContent: "center",
