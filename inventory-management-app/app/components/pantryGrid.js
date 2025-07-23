@@ -3,7 +3,7 @@ import { Grid, Box, Typography, Button, SvgIcon, useTheme, useMediaQuery, } from
 import { styled } from '@mui/material/styles';
 import EntryBox from "./entryBox";
 import RemoveIcon from '/app/components/icons/remove.svg';
-export default function PantryGrid ({ filteredPantry, removeItem, open, setOpen, edit, setEdit, fetchPantryItemData})  {
+export default function PantryGrid({ filteredPantry, removeItem, open, setOpen, edit, setEdit, fetchPantryItemData }) {
 
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.only('xs'));
@@ -12,7 +12,7 @@ export default function PantryGrid ({ filteredPantry, removeItem, open, setOpen,
     const isLg = useMediaQuery(theme.breakpoints.only('lg'));
     const isXl = useMediaQuery(theme.breakpoints.only('xl'));
     const truncateText = (text, maxLength) => {
-        return text.length > maxLength+3 ? text.slice(0, maxLength) + '...' : text;
+        return text.length > maxLength + 3 ? text.slice(0, maxLength) + '...' : text;
     };
 
     let charLimit = 20;
@@ -22,13 +22,13 @@ export default function PantryGrid ({ filteredPantry, removeItem, open, setOpen,
     else if (isLg) charLimit = 22;
     else if (isXl) charLimit = 19;
 
-  
 
-   
+
+
 
     const ScrollContainer = styled(Box)(({ theme }) => ({
         display: 'flex',
-       
+
         flexDirection: 'column',
         height: 'calc(4 * 150px + 3 * 16px)', // Height for 4 rows with spacing
         overflowY: 'auto', // Enables vertical scrolling if content exceeds height
@@ -51,14 +51,14 @@ export default function PantryGrid ({ filteredPantry, removeItem, open, setOpen,
             sx={{
                 width: '100%',
                 display: 'flex',
-                justifyContent: 'center', 
+                justifyContent: 'center',
                 pt: "25px",
                 fontWeight: 'bold',
                 color: '#2C3930',
                 letterSpacing: 2,
                 fontFamily: 'Roboto',
                 marginTop: '50px',
-                
+
             }}>
 
             < ScrollContainer sx={{ width: '100%', maxWidth: '1200px', padding: '10px' }}>
@@ -67,10 +67,11 @@ export default function PantryGrid ({ filteredPantry, removeItem, open, setOpen,
                         <Grid item xs={12} sm={12} md={6} lg={4} xl={3} key={name}>
                             <Box
                                 onClick={() => {
-                                    
+
                                     setOpen(true);
                                     setEdit(true);
-                                    fetchPantryItemData(name)}}
+                                    fetchPantryItemData(name)
+                                }}
                                 sx={{
                                     display: "flex",
                                     flexDirection: "column",
@@ -79,8 +80,8 @@ export default function PantryGrid ({ filteredPantry, removeItem, open, setOpen,
                                     // padding: 2,
                                     backgroundColor: "#202922",
                                     boxShadow: 'inset 0 4px 8px rgba(0,0,0,0.1)',
-                                    
-                                    
+
+
                                     background: 'radial-gradient(ellipse at 50% 50%, #2C3930, #202922)',
                                     "&:hover": {
                                         background: 'radial-gradient(ellipse at 50% 50%,  #3C4C41, #4E6054)',
@@ -101,7 +102,7 @@ export default function PantryGrid ({ filteredPantry, removeItem, open, setOpen,
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             removeItem(name)
-                                        
+
 
                                         }}
                                         sx={{
@@ -117,17 +118,24 @@ export default function PantryGrid ({ filteredPantry, removeItem, open, setOpen,
                                     />
                                 </Box>
 
-                                <Typography variant="h7" color="#CDD7D0"
+                                <Typography
+                                    variant="h6"
                                     sx={{
-                                        marginTop: 3, marginBottom: 1,
-                                        fontSize: {
-                                            xs: 20,
-                                            sm: 22,
-                                            md: 18,
-                                            lg: 16,
-                                            xl: 18,
-                                        },
-                                    }}>
+                                        color: '#DCD7C9',
+                                        fontFamily: '"Exo 2", sans-serif',
+                                        textShadow: '1px 1px 2px rgba(0, 0, 0, 0.4)',
+                                        fontSize: { xs: 20, sm: 24, md: 20, lg: 22, xl: 22 },
+                                        mt: 3,
+                                        mb: 1,
+                                        textAlign: 'center',
+                                        xs: 20,
+                                        sm: 22,
+                                        md: 18,
+                                        lg: 16,
+                                        xl: 18,
+
+                                    }}
+                                >
                                     {truncateText(name.charAt(0).toUpperCase() + name.slice(1), charLimit)}
                                 </Typography>
 

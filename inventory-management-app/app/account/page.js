@@ -41,7 +41,7 @@ export default function SignInPage() {
         <Box
             sx={{
                 bgcolor: "#DCD7C9]",
-                minHeight: "50vh",
+                minHeight: "100vh",
                 textAlign: "center",
                 display: "flex",
                 flexDirection: "column", // Ensures vertical stacking
@@ -64,7 +64,7 @@ export default function SignInPage() {
 
                 <Box
                     sx={{
-                        marginTop:"200px",
+                        marginTop: "200px",
                         bgcolor: "#DCD7C9]",
                         minHeight: "100vh",
                         textAlign: "center",
@@ -137,7 +137,7 @@ export default function SignInPage() {
                             width: { xs: "66.66vw", sm: "66.66vw", md: "50vw", lg: "33.33vw" },
                             background: "#2C3930",
                             padding: "30px",
-                            height: "300px",
+                            height: "350px",
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
@@ -147,7 +147,10 @@ export default function SignInPage() {
                             background: 'radial-gradient(ellipse at 50% 50%,  #3C4C41, #2C3930)'
                         }}
                     >
+
                         <img src="/images/account.png" alt="Pantry Aid" width="65px" />
+
+
 
 
                         <Box><Button variant="contained" size="large"

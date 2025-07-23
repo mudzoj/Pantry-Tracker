@@ -17,8 +17,18 @@ import Link from 'next/link';
 
 export default function Home() {
   const router = useRouter();
-  const handleClick = async (destination) => {
-    router.push(destination);
+  const { setLoading } = useLoading();
+  
+   const handleClick = async (destination) => {
+    const currentPath = window.location.pathname;
+    if (destination !== currentPath) {
+      setLoading(true);
+    }
+    try {
+      await router.push(destination);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   return (
