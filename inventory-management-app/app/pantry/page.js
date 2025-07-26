@@ -5,9 +5,6 @@ import {
   Typography,
   Button,
   Paper,
-  Grid,
-  Card,
-  CardContent,
   IconButton,
 } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
@@ -28,6 +25,9 @@ import ProduceIcon from "/app/components/icons/produce.svg";
 import OtherIcon from "/app/components/icons/other.svg";
 import AlphabeticalIcon from "/app/components/icons/alphabetical.svg";
 import AddIcon from "/app/components/icons/add.svg";
+import RecipeCard from "/app/components/RecipeCard";
+import AnimatedRecipeCarousel from "/app/components/AnimatedRecipeCarousel";
+import RecipePopup from "/app/components/RecipePopup";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -41,7 +41,10 @@ export default function Home() {
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0); // Track current recipe index
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [animationDirection, setAnimationDirection] = useState("right");
 
   const [hoveredId, setHoveredId] = useState(null);
   const [clickedId, setClickedId] = useState(null);
@@ -56,15 +59,26 @@ export default function Home() {
   ];
 
   const { pantry, addItem, removeItem, fetchPantryItem } = usePantry();
-  const { recipes, addRecipe, removeRecipe, fetchRecipeItem } = useRecipes();
+  const { recipes, addRecipe, removeRecipe, fetchRecipes } = useRecipes();
   const { user } = UserAuth();
   const router = useRouter();
 
-  // Redirect to account page if user is not authenticated
   useEffect(() => {
-    if (!user) router.push("/account");
-    else console.log("Authenticated user:", user.uid); // Debug user ID
-  }, [user]);
+    if (!user) {
+      router.push("/account");
+    } else {
+      fetchRecipes();
+    }
+  }, [user, fetchRecipes]);
+
+  // Ensure currentIndex is always valid when recipes update
+  useEffect(() => {
+    if (recipes.length > 0) {
+      setCurrentIndex((prev) => Math.min(prev, recipes.length - 1));
+    } else {
+      setCurrentIndex(0);
+    }
+  }, [recipes]);
 
   const fetchPantryItemData = async (itemId) => {
     const data = await fetchPantryItem(itemId);
@@ -79,29 +93,21 @@ export default function Home() {
     }
   };
 
-  // Generate and add a new recipe based on pantry items
   const getRecipes = async () => {
-    if (!user) {
-      console.error("User not authenticated");
-      return;
-    }
+    if (!user) return;
 
     setLoading(true);
     try {
-      const idToken = await user.getIdToken(); // Get ID token
-      console.log("Sending ID Token:", idToken); // Debug token
+      const idToken = await user.getIdToken();
       const response = await axios.post(
         "/api/recipes",
-        {
-          pantryItems: pantry.map((item) => item.name),
-        },
-        {
-          headers: { Authorization: `Bearer ${idToken}` }, // Send token to server
-        }
+        { pantryItems: pantry.map((item) => item.name) },
+        { headers: { Authorization: `Bearer ${idToken}` } }
       );
       const newRecipe = response.data.recipe;
       await addRecipe(newRecipe.title, newRecipe.ingredients, newRecipe.instructions);
-      setCurrentIndex(recipes.length); // Move to the newly added recipe
+      await fetchRecipes(); // updates recipes and triggers useEffect to adjust currentIndex
+      setAnimationDirection("right");
     } catch (error) {
       console.error("Error fetching recipes:", error);
     } finally {
@@ -109,27 +115,27 @@ export default function Home() {
     }
   };
 
+  const handleDelete = async (recipeTitle) => {
+    await removeRecipe(recipeTitle);
+    await fetchRecipes(); // currentIndex will be adjusted in the useEffect above
+  };
+
   const selectedIconItem = iconItems.find((item) => item.id === clickedId);
   const foodGroupName = selectedIconItem?.name || "All";
 
   const filteredPantry = pantry
     .filter((item) => {
-      const matchesSearch = item.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
       if (!matchesSearch) return false;
-      if (foodGroupName === "All" || foodGroupName === "Alphabetical") {
-        return true;
-      } else {
-        return item.group === foodGroupName;
-      }
+      if (foodGroupName === "All" || foodGroupName === "Alphabetical") return true;
+      return item.group === foodGroupName;
     })
-    .sort((a, b) => {
-      if (foodGroupName === "Alphabetical") {
-        return a.name.localeCompare(b.name);
-      }
-      return 0;
-    });
+    .sort((a, b) => (foodGroupName === "Alphabetical" ? a.name.localeCompare(b.name) : 0));
+
+  const openPopup = (recipe) => {
+    setSelectedRecipe(recipe);
+    setPopupOpen(true);
+  };
 
   return (
     <Box
@@ -204,13 +210,7 @@ export default function Home() {
           />
         </Box>
 
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <PantryGrid
             filteredPantry={filteredPantry}
             removeItem={removeItem}
@@ -237,7 +237,6 @@ export default function Home() {
         </Box>
       </Paper>
 
-      {/* AI Header Section */}
       <Box
         sx={{
           top: 80,
@@ -246,18 +245,19 @@ export default function Home() {
           alignItems: "center",
           height: "calc(35vh - 80px)",
           overflow: "auto",
-          border: "1px solid #ddd",
           padding: 2,
         }}
       >
         <Typography
-          variant="h6"
-          component="div"
+          variant="h7"
           sx={{
-            color: "#31473A",
-            fontFamily: "Roboto",
-            textAlign: "center",
-            mt: 1,
+            fontSize: "20px",
+            color: "#AFABA0",
+            fontFamily: '"Exo 2", sans-serif',
+            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
+            width: "100%",
+            maxWidth: "800px",
+            mx: "auto",
           }}
         >
           Start generating dishes based on your pantry!
@@ -267,165 +267,101 @@ export default function Home() {
           variant="h3"
           component="div"
           sx={{
+            fontSize: { xs: "20px", sm: "22px", md: "36px", lg: "45px", xl: "50px" },
             fontWeight: "bold",
-            color: "#31473A",
-            fontFamily: "Switzer",
+            color: "#E8E4D9",
             textAlign: "center",
-            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
-            letterSpacing: 1,
+            mt: 1,
+            fontFamily: '"Exo 2", sans-serif',
+            textShadow: "1px 1px 3px rgba(0, 0, 0, 0.5)",
+            letterSpacing: "0.5px",
           }}
         >
           Want Some Inspiration?
         </Typography>
       </Box>
 
-      {/* Generate Button and Recipe Carousel */}
-      <Box
-        sx={{
-          display: "grid",
-          placeItems: "center",
-          mt: 2,
-          mb: 4,
-        }}
-      >
+      <Box sx={{ display: "grid", placeItems: "center", mt: 2, mb: 4 }}>
         <Button
           variant="contained"
           onClick={getRecipes}
           disabled={loading}
           sx={{
-            width: "240px",
-            height: "60px",
-            padding: "16px 32px",
-            backgroundColor: "#31473A",
-            color: "#EDF4F2",
+            minWidth: "240px",
+            height: "64px",
+            padding: "12px 24px",
+            background: "linear-gradient(135deg, #2c3930 0%, #3f4f44 50%, #4a5b4e 100%)",
+            color: "#DCD7C9",
+            borderRadius: "32px",
+            boxShadow: "0 4px 12px rgba(63, 79, 68, 0.3)",
+            transition: "transform 0.3s, box-shadow 0.3s, background 0.5s",
             "&:hover": {
-              backgroundColor: "#EDF4F2",
-              color: "#31473A",
+              background: "linear-gradient(135deg, #3f4f44 0%, #4a5b4e 50%, #5c6f5b 100%)",
+              boxShadow: "0 8px 24px rgba(63, 79, 68, 0.5), 0 0 12px rgba(220, 215, 201, 0.3)",
+              transform: "scale(1.05)",
+            },
+            "&:disabled": {
+              background: "#202922",
+              color: "#AFABA0",
+              boxShadow: "none",
             },
           }}
         >
-          <Typography fontSize={"24px"}>
+          <Typography
+            sx={{
+              fontSize: "20px",
+              fontWeight: "bold",
+              color: "#DCD7C9",
+              fontFamily: '"Exo 2", sans-serif',
+              textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
+              letterSpacing: "0.5px",
+            }}
+          >
             {loading ? "Generating..." : "Generate"}
           </Typography>
         </Button>
 
-        {/* Recipe Carousel */}
-        {recipes.length > 0 && (
-          <Box
-            sx={{
-              mt: 4,
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <IconButton
-              onClick={() => setCurrentIndex((prev) => Math.max(prev - 1, 0))}
-              disabled={currentIndex === 0}
-              sx={{ color: "#31473A" }}
-            >
-              <ArrowBack />
-            </IconButton>
-            <Box
-              sx={{
-                width: "600px",
-                height: "400px",
-                overflow: "hidden",
-              }}
-            >
-              <Grid
-                container
-                spacing={2}
-                sx={{
-                  transform: `translateX(-${currentIndex * 620}px)`,
-                  transition: "transform 0.3s ease",
-                  display: "flex",
+        {recipes.length > 0 && recipes[currentIndex] && (
+          <Box sx={{ mt: 4, width: "80%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+              <IconButton
+                onClick={() => {
+                  setCurrentIndex((prev) => Math.max(0, prev - 1));
+                  setAnimationDirection("left");
                 }}
+                disabled={currentIndex <= 0}
+                sx={{ color: "#DCD7C9" }}
               >
-                {recipes.map((recipe, index) => (
-                  <Grid item key={index}>
-                    <Card
-                      sx={{
-                        width: 600,
-                        height: 400,
-                        bgcolor: "#EDF4F2",
-                        borderRadius: 2,
-                        boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                      }}
-                    >
-                      <CardContent>
-                        <Typography
-                          variant="h4"
-                          sx={{
-                            fontFamily: "Switzer",
-                            color: "#31473A",
-                            fontWeight: "bold",
-                            mb: 2,
-                            textAlign: "center",
-                          }}
-                        >
-                          {recipe.title}
-                        </Typography>
-                        <Typography
-                          variant="h6"
-                          sx={{
-                            fontFamily: "Roboto",
-                            color: "#2C3930",
-                            mb: 1,
-                          }}
-                        >
-                          Ingredients:
-                        </Typography>
-                        <ul style={{ textAlign: "left", paddingLeft: "20px" }}>
-                          {recipe.ingredients.map((ingredient, idx) => (
-                            <li key={idx} style={{ color: "#2C3930" }}>
-                              {ingredient}
-                            </li>
-                          ))}
-                        </ul>
-                        <Typography
-                          variant="h6"
-                          sx={{
-                            fontFamily: "Roboto",
-                            color: "#2C3930",
-                            mt: 2,
-                            mb: 1,
-                          }}
-                        >
-                          Instructions:
-                        </Typography>
-                        <ol style={{ textAlign: "left", paddingLeft: "20px" }}>
-                          {recipe.instructions.map((step, idx) => (
-                            <li
-                              key={idx}
-                              style={{
-                                color: "#2C3930",
-                                marginBottom: "8px",
-                              }}
-                            >
-                              {step}
-                            </li>
-                          ))}
-                        </ol>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
+                <ArrowBack />
+              </IconButton>
+              <Typography variant="h6" sx={{ mx: 2, color: "#DCD7C9", fontFamily: "Switzer" }}>
+                {currentIndex + 1} of {recipes.length}
+              </Typography>
+              <IconButton
+                onClick={() => {
+                  setCurrentIndex((prev) => Math.min(prev + 1, recipes.length - 1));
+                  setAnimationDirection("right");
+                }}
+                disabled={currentIndex >= recipes.length - 1}
+                sx={{ color: "#DCD7C9" }}
+              >
+                <ArrowForward />
+              </IconButton>
             </Box>
-            <IconButton
-              onClick={() =>
-                setCurrentIndex((prev) => Math.min(prev + 1, recipes.length - 1))
-              }
-              disabled={currentIndex === recipes.length - 1}
-              sx={{ color: "#31473A" }}
-            >
-              <ArrowForward />
-            </IconButton>
+            <AnimatedRecipeCarousel
+  recipes={recipes}
+  currentIndex={currentIndex}
+  animationDirection={animationDirection}
+  onClick={openPopup}
+  onDelete={handleDelete}
+/>
           </Box>
         )}
       </Box>
+
+      {popupOpen && selectedRecipe && (
+        <RecipePopup open={popupOpen} onClose={() => setPopupOpen(false)} recipe={selectedRecipe} />
+      )}
     </Box>
   );
 }

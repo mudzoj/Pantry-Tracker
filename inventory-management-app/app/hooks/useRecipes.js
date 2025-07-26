@@ -52,5 +52,5 @@ export function useRecipes() {
         }
         return null;
   }
-  return { recipes, addRecipe, removeRecipe, fetchRecipeItem };
+  return { recipes, addRecipe, removeRecipe, fetchRecipeItem, fetchRecipes };
 }

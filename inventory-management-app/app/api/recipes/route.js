@@ -50,7 +50,7 @@ export async function POST(request) {
     console.log("Existing recipe titles:", existingTitles);
 
     // Update prompt to avoid duplicates
-    const prompt = `Generate a detailed recipe using only these ingredients: ${pantryItems.join(", ")}. Include common pantry staples like salt, pepper, oil, and water if needed. Provide a title, ingredients list, and step-by-step instructions. Format the response with clear sections: 'Title:', 'Ingredients:', and 'Instructions:' followed by the respective content. Ensure the title is unique and not one of the following: ${existingTitles.join(", ") || 'none'}.`;
+    const prompt = `Generate a detailed recipe using only these ingredients: ${pantryItems.join(", ")}. Include common pantry staples like any spices, seasonings, salt, pepper, oil, and water if needed. Provide a title, ingredients list, and detailed step-by-step instructions. Format the response with clear sections: 'Title:', 'Ingredients:', and 'Instructions:' followed by the respective content. Ensure the title is unique, descriptive of the recipe, a max of 20 characters long, and not one of the following recipes or closely related. If it cant be found, you can add extra ingredients to make unique recipes: ${existingTitles.join(", ") || 'none'}.`;
 
     const response = await axios.post(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
