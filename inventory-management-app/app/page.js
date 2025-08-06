@@ -8,7 +8,7 @@ import { usePantry } from './hooks/usePantry';
 import FadeInSection from '/app/components/fadeBox';
 import ScrollMoveSection from '/app/components/scrollMoveSection';
 import ZoomInImage from '/app/components/zoomInImage';
-import ScrollToTopOnRefresh from 'app/components/ScrollToTopOnRefresh';
+import ScrollToTopOnRefresh from '/app/components/ScrollToTopOnRefresh';
 import InfoCards from './components/infoCards';
 import { UserAuth } from './context/AuthContext';
 import { useRouter } from 'next/navigation';

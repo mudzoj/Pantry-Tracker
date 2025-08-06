@@ -3,7 +3,7 @@ import { Box, Button, Typography, Paper } from '@mui/material';
 import React, { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthContext";
 import TopBar from '../components/topBar';
-import ScrollToTopOnRefresh from 'app/components/scrollToTopOnRefresh';
+import ScrollToTopOnRefresh from '/app/components/scrollToTopOnRefresh';
 import { doc, setDoc } from "firebase/firestore";
 import { db } from '../firebase/firebase';
 
