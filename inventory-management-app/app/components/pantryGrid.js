@@ -73,6 +73,7 @@ export default function PantryGrid({
         width: "100%",
         display: "flex",
         justifyContent: "center",
+        alignItems:"center",
         mt: "40px",
         flexDirection: "column",
         px: 1,

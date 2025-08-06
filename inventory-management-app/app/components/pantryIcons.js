@@ -51,7 +51,7 @@ export function IconList({ hoveredId, setHoveredId, clickedId, setClickedId }) {
         alignItems: "center",
         justifyContent: "center",
         marginTop: { xs: "20px", sm: "25px", md: "25px", lg: "0px" },
-        marginLeft: { sm: "0px", md: "10px", lg: "25px", xl: "0px" },
+        marginLeft: { sm: "0px", md: "0px", lg: "25px", xl: "0px" },
         gap: { xs: "2rem", sm: "3rem", md: "3rem", lg: "2rem" },
 
       }}>
@@ -65,7 +65,7 @@ export function IconList({ hoveredId, setHoveredId, clickedId, setClickedId }) {
           style={{
             color: getColor(item.id),
             cursor: "pointer",
-            fontSize: 30,
+            fontSize: 27,
           }}
         />
       ))}
