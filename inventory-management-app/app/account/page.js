@@ -1,17 +1,12 @@
 "use client";
 import { Box, Button, Typography, Paper } from '@mui/material';
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { UserAuth } from "../context/AuthContext";
 import TopBar from '../components/topBar';
 import ScrollToTopOnRefresh from '/app/components/ScrolltoTopOnRefresh';
-import { doc, setDoc } from "firebase/firestore";
-import { db } from '../firebase/firebase';
-
 
 export default function SignInPage() {
     const { user, googleSignIn, logOut } = UserAuth();
-    const [loading, setLoading] = useState(true);
-
 
     const handleSignIn = async () => {
         try {
@@ -29,103 +24,61 @@ export default function SignInPage() {
         }
     };
 
-    useEffect(() => {
-        const checkAuthentication = async () => {
-            await new Promise((resolve) => setTimeout(resolve, 50));
-            setLoading(false);
-        };
-        checkAuthentication();
-    }, [user]);
-
     return (
         <Box
             sx={{
-                bgcolor: "#DCD7C9]",
                 minHeight: "100vh",
+                bgcolor: "#2C3930",
                 textAlign: "center",
                 display: "flex",
-                flexDirection: "column", // Ensures vertical stacking
-                alignItems: "center", // Centers items horizontally
-                justifyContent: "center", // Centers items vertically rgb(220, 215, 201)
-                backgroundColor: "#2C3930"
-
-
-
-
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
             }}
         >
             <ScrollToTopOnRefresh />
-            <TopBar></TopBar>
+            <TopBar />
 
-            {loading ? (
-                <Typography>Loading...</Typography>
-            ) : user ? (
-                //User is logged in
-
-                <Box
-                    sx={{
-                        marginTop: "200px",
-                        bgcolor: "#DCD7C9]",
-                        minHeight: "100vh",
-                        textAlign: "center",
-                        display: "flex",
-                        flexDirection: "column", // Ensures vertical stacking
-                        alignItems: "center", // Centers items horizontally
-                        backgroundColor: "#2C3930",
-
-
-
-
-                    }}
-                >
-
+            {user ? (
+                <Box sx={{ mt: "200px" }}>
                     <Typography
                         variant="h4"
                         sx={{
-                            marginTop: '0px',
                             fontWeight: 'bold',
                             color: '#C5C1B4',
-                            fontFamily: '"Exo 2", sans-serif', // Add quotes for multi-word fonts
-                            textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)'
-
+                            fontFamily: '"Exo 2", sans-serif',
+                            textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
                         }}
                     >
                         Welcome, {user.displayName || "User"}!
                     </Typography>
+
                     <Button
                         variant="contained"
-                        color="secondary"
                         onClick={handleSignOut}
-
                         sx={{
-                            scale: "100%",
-                            marginTop: "25px",
-                            backgroundColor: '#3F4F44', // Your custom color
-                            color: 'white', // Text color
-                            width: '20wh',
-                            height: '5vh', // Optional: control height for a fixed size
+                            mt: 3,
+                            backgroundColor: '#3F4F44',
+                            color: 'white',
+                            width: '20vw',
+                            height: '5vh',
                             '&:hover': {
                                 backgroundColor: '#202822',
-                            }
+                            },
                         }}
                     >
                         Sign Out
                     </Button>
                 </Box>
             ) : (
-
-                //user is not logged in
-
-                <Box sx={{ alignItems: "center" }}>
+                <Box sx={{ mt: "250px", textAlign: "center" }}>
                     <Typography
                         variant="h4"
                         sx={{
-                            marginTop: '250px',
                             fontWeight: 'bold',
                             color: '#C5C1B4',
-                            fontFamily: '"Exo 2", sans-serif', // Add quotes for multi-word fonts
-                            textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)'
-
+                            fontFamily: '"Exo 2", sans-serif',
+                            textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
                         }}
                     >
                         Create an Account to Get Started
@@ -134,143 +87,105 @@ export default function SignInPage() {
                     <Paper
                         elevation={20}
                         sx={{
-                            width: { xs: "66.66vw", sm: "66.66vw", md: "50vw", lg: "33.33vw" },
-                            background: "#2C3930",
-                            padding: "30px",
-                            height: "350px",
+                            width: { xs: "66.66vw", md: "50vw", lg: "33.33vw" },
+                            background: 'radial-gradient(ellipse at 50% 50%, #3C4C41, #2C3930)',
+                            p: 4,
+                            mt: 5,
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
-                            justifyContent: "center",
-                            margin: "50px auto",
                             borderRadius: "32px",
-                            background: 'radial-gradient(ellipse at 50% 50%,  #3C4C41, #2C3930)'
                         }}
                     >
+                        <img src="/images/account.png" alt="Account Icon" width="65px" />
 
-                        <img src="/images/account.png" alt="Pantry Aid" width="65px" />
-
-
-
-
-                        <Box><Button variant="contained" size="large"
+                        <Button
+                            variant="contained"
+                            size="large"
                             onClick={handleSignIn}
-                            elevation={20}
                             sx={{
-
-                                scale: "100%",
-                                marginTop: "25px",
-                                backgroundColor: '#3F4F44', // Your custom color
-                                color: 'white', // Text color
-                                width: '20wh',
-                                height: '5vh', // Optional: control height for a fixed size
+                                mt: 3,
+                                backgroundColor: '#3F4F44',
+                                color: 'white',
+                                width: '20vw',
+                                height: '5vh',
                                 '&:hover': {
-                                    backgroundColor: '#202822', // Hover effect color
-                                }
-
+                                    backgroundColor: '#202822',
+                                },
                             }}
                         >
-                            <img src="/images/lock.png" alt="Pantry Aid" width="30px" />
-                            <Typography sx={{
-                                marginTop: "4px",
-                                fontSize: "16px",
-                                color: "#DCD7C9", fontWeight: "Bold", fontFamily: '"Exo 2", sans-serif', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)'
-                                // Add quotes for multi-word fonts
-                            }}>
-                                Create Account
-                            </Typography>
-
-                        </Button>
-                            <Box
-                                sx={{
-                                    display: "flex", // Enables flexbox
-                                    flexDirection: "row", // Ensures items are in a row
-                                    alignItems: "center", // Vertically aligns items
-                                    marginTop: "10px",
-                                    justifyContent: "center",
-
-                                }}>
-                                <Typography
-                                    sx={{
-                                        fontSize: { xs: "10px", sm: "14px", md: "14px", lg: "14px" },
-                                        // minHeight: "60px", // Maintain consistent spacing
-                                        fontWeight: '',
-                                        color: '#C5C1B4',
-                                        textAlign: "center",
-                                        marginright: "8px",
-
-                                        fontFamily: '"Exo 2", sans-serif', // Add quotes for multi-word fonts
-                                        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)'
-                                    }}
-                                >
-                                    Powered by
-                                </Typography>
-
-
-                            </Box>
-                            <Box
-                                sx={{
-                                    display: "flex", // Enables flexbox
-                                    flexDirection: "row", // Ensures items are in a row
-                                    alignItems: "center", // Vertically aligns items
-                                    marginTop: "10px",
-                                    justifyContent: "center",
-
-                                }}>
-                                <img src="/images/google.png" alt="Pantry Aid" width="20px" marginright="20px" />
-                            </Box>
+                            <img src="/images/lock.png" alt="Lock Icon" width="30px" style={{ marginRight: '8px' }} />
                             <Typography
                                 sx={{
-                                    fontSize: { xs: "10px", sm: "10px", md: "12px", lg: "12px" },
-                                    flexGrow: 1, // Prevent Typography from expanding
-                                    flexShrink: 1, // Allow shrinking if necessary
-                                    // minHeight: "60px", // Maintain consistent spacing
-                                    fontWeight: '',
-                                    color: '#C5C1B4',
-                                    textAlign: "center",
-                                    marginTop: "20px",
-                                    fontFamily: '"Exo 2", sans-serif', // Add quotes for multi-word fonts
-                                    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)'
+                                    fontSize: "16px",
+                                    color: "#DCD7C9",
+                                    fontWeight: "bold",
+                                    fontFamily: '"Exo 2", sans-serif',
+                                    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
                                 }}
                             >
-                                Already have an account?
+                                Create Account
                             </Typography>
-                            <Button variant="contained" size="large" disableElevation
-                                onClick={handleSignIn}
+                        </Button>
+
+                        <Typography
+                            sx={{
+                                mt: 3,
+                                fontSize: "14px",
+                                color: '#C5C1B4',
+                                fontFamily: '"Exo 2", sans-serif',
+                                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
+                            }}
+                        >
+                            Powered by
+                        </Typography>
+
+                        <Box sx={{ mt: 1 }}>
+                            <img src="/images/google.png" alt="Google Logo" width="20px" />
+                        </Box>
+
+                        <Typography
+                            sx={{
+                                mt: 3,
+                                fontSize: "12px",
+                                color: '#C5C1B4',
+                                fontFamily: '"Exo 2", sans-serif',
+                                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
+                            }}
+                        >
+                            Already have an account?
+                        </Typography>
+
+                        <Button
+                            variant="contained"
+                            size="large"
+                            onClick={handleSignIn}
+                            sx={{
+                                mt: 1,
+                                backgroundColor: '#3F4F44',
+                                color: 'white',
+                                width: '20vw',
+                                height: '5vh',
+                                '&:hover': {
+                                    backgroundColor: '#202822',
+                                },
+                            }}
+                        >
+                            <Typography
                                 sx={{
-
-                                    scale: "50%",
-
-                                    backgroundColor: '#3F4F44', // Your custom color
-                                    color: 'white', // Text color
-                                    width: '20wh',
-                                    height: '5vh', // Optional: control height for a fixed size
-                                    '&:hover': {
-                                        backgroundColor: '#202822', // Hover effect color
-                                    }
-
+                                    fontSize: "14px",
+                                    color: "#DCD7C9",
+                                    fontWeight: "bold",
+                                    fontFamily: '"Exo 2", sans-serif',
+                                    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
                                 }}
                             >
-
-                                <Typography sx={{
-                                    marginTop: "1px",
-                                    color: "#DCD7C9", fontWeight: "Bold", fontFamily: '"Exo 2", sans-serif', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)'
-                                    // Add quotes for multi-word fonts
-                                }}>
-                                    Sign In
-                                </Typography>
-
-                            </Button>
-                        </Box>
+                                Sign In
+                            </Typography>
+                        </Button>
                     </Paper>
                 </Box>
             )}
-
-
-
-
         </Box>
-
-
     );
 }

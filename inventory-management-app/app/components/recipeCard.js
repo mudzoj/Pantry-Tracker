@@ -45,7 +45,7 @@ const RecipeCard = ({ recipe, onClick, onDelete, animationDirection }) => {
       boxShadow: "0 6px 16px rgba(0,0,0,0.3)",
       position: "relative",
       overflow: "hidden",
-      cursor: "pointer", // make it look clickable
+      cursor: "pointer",
       transition: "background 0.3s ease",
       "&:hover": {
         bgcolor: "#27322A",

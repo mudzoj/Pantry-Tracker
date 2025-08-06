@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { SvgIcon, Box } from "@mui/material";
 
 import MeatIcon from '/app/components/icons/meat.svg';
@@ -7,8 +6,6 @@ import GrainIcon from '/app/components/icons/grains.svg';
 import ProduceIcon from '/app/components/icons/produce.svg';
 import OtherIcon from '/app/components/icons/other.svg';
 import AlphabeticalIcon from '/app/components/icons/alphabetical.svg';
-import AddIcon from '/app/components/icons/add.svg';
-
 
 const iconItems = [
   { id: 1, name: "Meat", icon: MeatIcon },
@@ -30,8 +27,6 @@ export function IconList({ hoveredId, setHoveredId, clickedId, setClickedId }) {
     } else {
       console.log(clickedId)
       setClickedId(id);
-
-
     }
 
   };

@@ -31,11 +31,11 @@ export function useRecipes() {
     }));
 
     setRecipes(recipesList);
-  }, [user]); // ✅ Recreate only when user changes
+  }, [user]); 
 
   useEffect(() => {
     fetchRecipes();
-  }, [fetchRecipes]); // ✅ Now safely included
+  }, [fetchRecipes]); 
 
   const addRecipe = async (title, ingredients, instructions) => {
     if (!user) return;

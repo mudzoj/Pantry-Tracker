@@ -14,7 +14,7 @@ const FadeInSection = ({ children, scrollThreshold = 100, delay = 0 }) => {
       }
     };
 
-    // Trigger immediately if scrollThreshold is 0 (fade-in on any scroll)
+    // Trigger immediately
     if (scrollThreshold === 0 && !hasTriggered.current) {
       window.addEventListener('scroll', handleScroll, { passive: true });
     } else if (!hasTriggered.current) {

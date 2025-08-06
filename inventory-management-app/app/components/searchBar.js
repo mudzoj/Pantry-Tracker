@@ -1,10 +1,9 @@
-import { TextField, Button, InputAdornment, Box, Dialog, DialogTitle, SvgIcon } from '@mui/material';
-import { useEffect, useState } from 'react'
+import { TextField, Box, SvgIcon } from '@mui/material';
 import EntryBox from './entryBox';
 
 
 import AddIcon from '/app/components/icons/add.svg';
-import { color } from 'framer-motion';
+
 
 const SearchBar = ({ searchQuery, setSearchQuery, foodGroup, setFoodGroup,
     date, setDate, amount, setAmount, unit, setUnit, open, setOpen, edit, setEdit,
@@ -29,11 +28,8 @@ const SearchBar = ({ searchQuery, setSearchQuery, foodGroup, setFoodGroup,
     return (
         <Box
             sx={{
-                // position: 'sticky',
                 display: 'flex',
                 flexDirection: 'row',
-                // alignItems: 'center',
-                // flexWrap: 'wrap',
                 justifyContent: "left",
                 width: {xs:"95%", sm:"95%", md:"80%", lg:"55%", xl:"65%"},
                 marginLeft: "1%"
@@ -47,19 +43,19 @@ const SearchBar = ({ searchQuery, setSearchQuery, foodGroup, setFoodGroup,
                 inputProps={{ maxLength: 14 }}
                 size="small"
                 sx={{
-                    backgroundColor: "#202922", // Background color of the search field
+                    backgroundColor: "#202922", 
                     width: "600px",
                     borderRadius: 2,
                     '& .MuiInputLabel-root': {
-                        color: '#9A968C', // Color of Label
+                        color: '#9A968C',
                         fontSize: "18px",
                         marginLeft: "8px",
                         transform: 'translateY(40%)',
                     },
                     '& .MuiInputBase-root': {
-                        color: '#DCD7C9', // Text color within the search field
+                        color: '#DCD7C9', 
                         borderRadius: 2,
-                        // height: { xs: '30px',  sm: '15px', md: '40px',  lg: '35px'},
+                       
                     },
                     '& .MuiOutlinedInput-root': {
                         borderRadius: 2,
@@ -68,19 +64,16 @@ const SearchBar = ({ searchQuery, setSearchQuery, foodGroup, setFoodGroup,
                             borderColor: '#1E2721', // default
                         },
                         '&:hover fieldset': {
-                            borderColor: '#AFABA0', // hover
+                            borderColor: '#AFABA0', 
                         },
                         '&.Mui-focused fieldset': {
-                            borderColor: '#C0BCB2', // focused — override the blue
+                            borderColor: '#C0BCB2', 
                         },
                     },
                 }}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search Your Pantry"
-
-
-
 
             />
 
@@ -89,7 +82,7 @@ const SearchBar = ({ searchQuery, setSearchQuery, foodGroup, setFoodGroup,
                 onClick={handleClickOpen}
                 sx={{
                     "&:hover": {
-                        color: "#617467", // Change to your desired hover color
+                        color: "#617467", 
                     },
                     color: "#DCD7C9",
                     cursor: "pointer",

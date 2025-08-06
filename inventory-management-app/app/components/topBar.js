@@ -54,9 +54,6 @@ const TopBar = () => {
       setIsVisible((prev) => prev || nearTop);
     };
 
-    // Initial check
-    handleScroll();
-
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 

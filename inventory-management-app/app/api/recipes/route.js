@@ -5,7 +5,7 @@ import admin from 'firebase-admin';
 
 config(); // Load environment variables
 
-// Safe Firebase Admin SDK initialization
+//Firebase Admin SDK initialization
 if (!admin.apps.length) {
   const projectId = process.env.FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
@@ -28,11 +28,7 @@ const db = admin.firestore();
 
 export async function POST(request) {
   try {
-    // Verify ID token
     const authHeader = request.headers.get('Authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json({ error: "Missing or invalid Authorization header" }, { status: 401 });
-    }
 
     const idToken = authHeader.split('Bearer ')[1];
     const decodedToken = await admin.auth().verifyIdToken(idToken);
@@ -54,24 +50,24 @@ export async function POST(request) {
     const snapshot = await recipesRef.get();
     const existingTitles = snapshot.docs.map(doc => doc.data().title?.toLowerCase?.() ?? '');
 
-    // Prompt with cuisine variety and unique title requirement
+    // Prompt Creation
     const prompt = `
-Create a unique recipe using only the following ingredients: ${pantryItems.join(", ")}, plus basic staples like salt, pepper, oil, and water.
+      Create a unique recipe using only the following ingredients: ${pantryItems.join(", ")}, plus basic staples like salt, pepper, oil, and water.
 
-Format like:
-**Title:** <Short recipe name (max 20 characters)>
-**Ingredients:**
-* item1
-* item2
-**Instructions:**
-1. Step one
-2. Step two
+      Format like:
+      **Title:** <Short recipe name (max 20 characters)>
+      **Ingredients:**
+      * item1
+      * item2
+      **Instructions:**
+      1. Step one
+      2. Step two
 
-Ensure:
-- The title is no more than 20 characters.
-- The title and cuisine differ from these existing ones: ${existingTitles.join(", ") || 'none'}.
-- The cuisine should be unique (e.g., Italian, Indian, Japanese, etc.).
-`;
+      Ensure:
+      - The title is no more than 20 characters.
+      - The title and cuisine differ from these existing ones: ${existingTitles.join(", ") || 'none'}.
+      - The cuisine should be unique (e.g., Italian, Indian, Japanese, etc.).
+      `;
 
     const response = await axios.post(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
@@ -95,7 +91,7 @@ Ensure:
     let currentSection = null;
 
     for (const line of lines) {
-      // Title parser (robust)
+      //Parse API response 
       if (!formattedRecipe.title && /title:/i.test(line)) {
         formattedRecipe.title = line.split(/title:/i)[1]?.trim() || 'Untitled Recipe';
       } else if (/ingredients:/i.test(line)) {
@@ -113,11 +109,6 @@ Ensure:
     if (!formattedRecipe.title) formattedRecipe.title = 'Generated Recipe';
     if (formattedRecipe.ingredients.length === 0) formattedRecipe.ingredients.push('No ingredients listed');
     if (formattedRecipe.instructions.length === 0) formattedRecipe.instructions.push('No instructions available');
-
-    // Final duplicate title check
-    if (existingTitles.includes(formattedRecipe.title.toLowerCase())) {
-      return NextResponse.json({ error: "Duplicate recipe title generated" }, { status: 400 });
-    }
 
     return NextResponse.json({ recipe: formattedRecipe });
 

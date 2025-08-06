@@ -2,18 +2,12 @@
 
 import './globals.css';
 import { Box, Typography, Button } from '@mui/material';
-import { useEffect, useState } from 'react';
 import TopBar from '/app/components/topBar';
-import { usePantry } from './hooks/usePantry';
 import FadeInSection from '/app/components/fadeBox';
-import ScrollMoveSection from '/app/components/scrollMoveSection';
-import ZoomInImage from '/app/components/zoomInImage';
 import ScrollToTopOnRefresh from '/app/components/ScrolltoTopOnRefresh';
 import InfoCards from './components/infoCards';
-import { UserAuth } from './context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useLoading } from './context/LoadingContext';
-import Link from 'next/link';
 
 export default function Home() {
   const router = useRouter();

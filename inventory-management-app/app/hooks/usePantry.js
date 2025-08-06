@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { db } from '../firebase/firebase';
 import {
   collection,
-  query,
   getDocs,
   doc,
   getDoc,
@@ -20,7 +19,7 @@ export function usePantry() {
 
     const pantryRef = collection(db, 'users', user.uid, 'pantry');
     const pantrySnap = await getDocs(pantryRef);
-
+    
     const pantryList = pantrySnap.docs.map((doc) => ({
       name: doc.id,
       ...doc.data(),

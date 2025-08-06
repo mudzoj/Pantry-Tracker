@@ -6,7 +6,7 @@ const ScrollMoveSection = ({
   children,
   scrollThreshold = 100, // Scroll distance to trigger fade-in (pixels)
   maxTravelDistance = 100, // Max downward movement (pixels)
-  moveSpeed = 1, // Multiplier for scroll movement (e.g., 0.5 = half scroll speed)
+  moveSpeed = 1, // Multiplier for scroll movement 
   delay = 0, // Delay for fade-in animation (seconds)
 }) => {
   const [isVisible, setIsVisible] = useState(false);

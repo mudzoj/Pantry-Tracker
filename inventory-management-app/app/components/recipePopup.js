@@ -14,38 +14,38 @@ const RecipePopup = ({ open, onClose, recipe }) => {
       }}
     >
       <Box
-  sx={{
-    width: 700,
-    maxHeight: "85vh",
-    overflowY: "auto",
-    bgcolor: "linear-gradient(135deg, #EDF4F2 0%, #DCD7C9 100%)",
-    borderRadius: 12,
-    boxShadow:
-      "0 10px 32px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(49, 71, 58, 0.2)",
-    p: 4,
-    position: "relative",
-    animation: "fadeIn 0.5s ease",
-    scrollBehavior: "smooth",
-    "&::-webkit-scrollbar": {
-      width: "10px",
-    },
-    "&::-webkit-scrollbar-track": {
-      background: "transparent",
-    },
-    "&::-webkit-scrollbar-thumb": {
-      backgroundColor: "#AFABA0",
-      borderRadius: "3px",
-      border: "2px solid #DCD7C9",
-    },
-    "&::-webkit-scrollbar-thumb:hover": {
-      backgroundColor: "#C5C1B4",
-    },
-    "@keyframes fadeIn": {
-      from: { opacity: 0, transform: "scale(0.95)" },
-      to: { opacity: 1, transform: "scale(1)" },
-    },
-  }}
->
+        sx={{
+          width: 700,
+          maxHeight: "85vh",
+          overflowY: "auto",
+          bgcolor: "linear-gradient(135deg, #EDF4F2 0%, #DCD7C9 100%)",
+          borderRadius: 12,
+          boxShadow:
+            "0 10px 32px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(49, 71, 58, 0.2)",
+          p: 4,
+          position: "relative",
+          animation: "fadeIn 0.5s ease",
+          scrollBehavior: "smooth",
+          "&::-webkit-scrollbar": {
+            width: "10px",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "transparent",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "#AFABA0",
+            borderRadius: "3px",
+            border: "2px solid #DCD7C9",
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            backgroundColor: "#C5C1B4",
+          },
+          "@keyframes fadeIn": {
+            from: { opacity: 0, transform: "scale(0.95)" },
+            to: { opacity: 1, transform: "scale(1)" },
+          },
+        }}
+      >
         <IconButton
           sx={{
             position: "absolute",
