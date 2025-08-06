@@ -23,8 +23,8 @@ import GrainIcon from "/app/components/icons/grains.svg";
 import ProduceIcon from "/app/components/icons/produce.svg";
 import OtherIcon from "/app/components/icons/other.svg";
 import AlphabeticalIcon from "/app/components/icons/alphabetical.svg";
-import AnimatedRecipeCarousel from "/app/components/AnimatedRecipeCarousel";
-import RecipePopup from "/app/components/RecipePopup";
+import AnimatedRecipeCarousel from "/app/components/animatedRecipeCarousel";
+import RecipePopup from "/app/components/recipePopup";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
