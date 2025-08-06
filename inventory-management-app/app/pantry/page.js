@@ -17,15 +17,12 @@ import { useRecipes } from "../hooks/useRecipes";
 import { UserAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 import IconList from "../components/pantryIcons";
-import EntryBox from "/app/components/entryBox";
 import MeatIcon from "/app/components/icons/meat.svg";
 import DairyIcon from "/app/components/icons/dairy.svg";
 import GrainIcon from "/app/components/icons/grains.svg";
 import ProduceIcon from "/app/components/icons/produce.svg";
 import OtherIcon from "/app/components/icons/other.svg";
 import AlphabeticalIcon from "/app/components/icons/alphabetical.svg";
-import AddIcon from "/app/components/icons/add.svg";
-import RecipeCard from "/app/components/RecipeCard";
 import AnimatedRecipeCarousel from "/app/components/AnimatedRecipeCarousel";
 import RecipePopup from "/app/components/RecipePopup";
 
@@ -60,18 +57,17 @@ export default function Home() {
 
   const { pantry, addItem, removeItem, fetchPantryItem } = usePantry();
   const { recipes, addRecipe, removeRecipe, fetchRecipes } = useRecipes();
-  const { user } = UserAuth();
+  const { user, loading: authLoading } = UserAuth(); 
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
+    if (!authLoading && !user) {
       router.push("/account");
-    } else {
+    } else if (!authLoading && user) {
       fetchRecipes();
     }
-  }, [user, fetchRecipes]);
+  }, [user, authLoading, fetchRecipes]);
 
-  // Ensure currentIndex is always valid when recipes update
   useEffect(() => {
     if (recipes.length > 0) {
       setCurrentIndex((prev) => Math.min(prev, recipes.length - 1));
@@ -90,6 +86,7 @@ export default function Home() {
       setDay(data.expiry.slice(0, 2));
       setMonth(data.expiry.slice(3, 5));
       setYear(data.expiry.slice(-4));
+      
     }
   };
 
@@ -106,18 +103,19 @@ export default function Home() {
       );
       const newRecipe = response.data.recipe;
       await addRecipe(newRecipe.title, newRecipe.ingredients, newRecipe.instructions);
-      await fetchRecipes(); // updates recipes and triggers useEffect to adjust currentIndex
+      setCurrentIndex(0);
+      await fetchRecipes();
       setAnimationDirection("right");
     } catch (error) {
       console.error("Error fetching recipes:", error);
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   };
 
   const handleDelete = async (recipeTitle) => {
     await removeRecipe(recipeTitle);
-    await fetchRecipes(); // currentIndex will be adjusted in the useEffect above
+    await fetchRecipes(); 
   };
 
   const selectedIconItem = iconItems.find((item) => item.id === clickedId);
@@ -146,7 +144,7 @@ export default function Home() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "flex-start", 
         backgroundColor: "#2C3930",
       }}
     >
@@ -159,13 +157,14 @@ export default function Home() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "flex-start",
           width: "80%",
           margin: "0 auto",
           boxShadow: "inset 0 4px 8px rgba(0,0,0,0.3)",
           padding: 2,
           borderRadius: 4,
           backgroundColor: "#27322A",
+          overflow: "visible",
         }}
       >
         <Box
@@ -210,7 +209,13 @@ export default function Home() {
           />
         </Box>
 
-        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+        <Box
+          sx={{
+            width: "100%",
+            display: "block",
+            overflow: "visible",
+          }}
+        >
           <PantryGrid
             filteredPantry={filteredPantry}
             removeItem={removeItem}
@@ -349,12 +354,12 @@ export default function Home() {
               </IconButton>
             </Box>
             <AnimatedRecipeCarousel
-  recipes={recipes}
-  currentIndex={currentIndex}
-  animationDirection={animationDirection}
-  onClick={openPopup}
-  onDelete={handleDelete}
-/>
+              recipes={recipes}
+              currentIndex={currentIndex}
+              animationDirection={animationDirection}
+              onClick={openPopup}
+              onDelete={handleDelete}
+            />
           </Box>
         )}
       </Box>

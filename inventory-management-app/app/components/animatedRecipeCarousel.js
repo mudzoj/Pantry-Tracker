@@ -35,7 +35,7 @@ export default function AnimatedRecipeCarousel({
 
   return (
     <Box sx={{ position: "relative", width: 500, height: 220 }}>
-      <AnimatePresence mode="wait" custom={animationDirection}>
+      <AnimatePresence mode="sync" custom={animationDirection}>
         {next && (
           <motion.div
             key={next.title + "-next"}

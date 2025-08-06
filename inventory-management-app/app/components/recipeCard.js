@@ -78,7 +78,7 @@ const RecipeCard = ({ recipe, onClick, onDelete, animationDirection }) => {
               {recipe ? recipe.title || "Untitled" : "Loading..."}
             </Typography>
             <IconButton
-              sx={{ color: "#FFFFFF", "&:hover": { color: "#DCD7C9" } }}
+              sx={{ color: "#FFFFFF", "&:hover": { color: "#9E1A1A" } }}
               onClick={(e) => {
                 e.stopPropagation();
                 onDelete?.(recipe?.title);

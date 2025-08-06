@@ -1,17 +1,31 @@
-import { Dialog, DialogTitle, Button, TextField, Box, MenuItem, Typography } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { Dialog, DialogTitle, Button, TextField, Box, MenuItem, Typography } from '@mui/material';
+import { useEffect, useState, useRef } from 'react';
 
-
-export default function EntryBox({ onClose, selectedValue, open, searchQuery,
-                                   setSearchQuery, foodGroup, setFoodGroup, 
-                                   setDate, amount, setAmount, unit, setUnit,
-                                   addItem, edit, setEdit, day, setDay, month, setMonth,
-                                   year, setYear}) {
-
-  const groups = ["Protein", "Produce", "Grain", "Dairy", "Other"]
-  const amounts = ["items", "g", "kg", "mL", "L", "cup"]
-
-
+export default function EntryBox({
+  onClose,
+  selectedValue,
+  open,
+  searchQuery,
+  setSearchQuery,
+  foodGroup,
+  setFoodGroup,
+  setDate,
+  amount,
+  setAmount,
+  unit,
+  setUnit,
+  addItem,
+  edit,
+  setEdit,
+  day,
+  setDay,
+  month,
+  setMonth,
+  year,
+  setYear,
+}) {
+  const groups = ["Protein", "Produce", "Grain", "Dairy", "Other"];
+  const amounts = ["items", "g", "kg", "mL", "L", "cup"];
 
   const [errors, setErrors] = useState({
     day: false,
@@ -21,12 +35,16 @@ export default function EntryBox({ onClose, selectedValue, open, searchQuery,
     foodGroup: false,
   });
 
+  const dayRef = useRef(null);
+  const monthRef = useRef(null);
+  const yearRef = useRef(null);
+
   const handleClose = () => {
     onClose(selectedValue);
-    setSearchQuery("")
-    setDay("")
-    setMonth("")
-    setYear("")
+    setSearchQuery("");
+    setDay("");
+    setMonth("");
+    setYear("");
     setErrors({
       day: false,
       month: false,
@@ -36,12 +54,15 @@ export default function EntryBox({ onClose, selectedValue, open, searchQuery,
     });
   };
 
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      handleSubmit();
+  const handleKeyDown = (event, field) => {
+    const { value, maxLength } = event.target;
+    if (event.key >= '0' && event.key <= '9' && value.length >= maxLength) {
+      event.preventDefault();
+      if (field === 'day' && monthRef.current) monthRef.current.focus();
+      if (field === 'month' && yearRef.current) yearRef.current.focus();
     }
   };
+
   const handleSubmit = () => {
     const dayValid = Number(day) >= 1 && Number(day) <= 31;
     const monthValid = Number(month) >= 1 && Number(month) <= 12;
@@ -54,72 +75,74 @@ export default function EntryBox({ onClose, selectedValue, open, searchQuery,
       month: !monthValid,
       year: !yearValid,
       searchQuery: !searchQueryValid,
-      foodGroup : !foodGroupValid,
+      foodGroup: !foodGroupValid,
     });
 
     if (dayValid && monthValid && yearValid && searchQueryValid && foodGroupValid) {
-      setDate(day +"/" +month +"/" + year)
-      console.log("Submit:", {day,month,year});
-      addItem(searchQuery, foodGroup, amount, unit, day +"/" +month +"/" + year)
-      handleClose()
+      setDate(`${day}/${month}/${year}`);
+      console.log("Submit:", { day, month, year });
+      addItem(searchQuery, foodGroup, amount, unit, `${day}/${month}/${year}`);
+      handleClose();
     }
   };
-
-
 
   return (
     <Dialog
       onClose={handleClose}
       open={open}
-      onKeyDown={handleKeyDown}
-      TransitionProps={{
-        onExited: ()=> setEdit(false)
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') handleSubmit();
       }}
-      PaperProps={{ sx: { width: "75vw", backgroundColor: 'transparent' } }}>
+      TransitionProps={{
+        onExited: () => setEdit(false),
+      }}
+      PaperProps={{ sx: { width: "75vw", backgroundColor: 'transparent' } }}
+    >
       <Box
-         sx={{
+        sx={{
           backgroundColor: "#2C3930",
-          borderRadius: 4, // or '12px'
-          boxShadow:10,
-          overflow: "hidden", // this ensures children don't spill over the rounded edges
+          borderRadius: 4,
+          boxShadow: 10,
+          overflow: "hidden",
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           color: "#CDD7D0",
-  }}
+        }}
       >
-
-        <DialogTitle sx={{display:"flex", justifyContent:"center", textShadow: "2px 2px 4px rgba(0, 0, 0, 1.0)",}}>Add to your Pantry</DialogTitle>
+        <DialogTitle sx={{ display: "flex", justifyContent: "center", textShadow: "2px 2px 4px rgba(0, 0, 0, 1.0)" }}>
+          Add to your Pantry
+        </DialogTitle>
         <Box sx={{ display: "flex", alignItems: 'center', gap: 2 }}>
           <TextField
-
             id="outlined"
             size="small"
             label="Pantry Item"
             placeholder="Chicken Breast"
             value={searchQuery}
-            InputLabelProps={{sx:{color: '#9A968C', 
-                              '&.MuiInputLabel-shrink': {
-                                color: '#CDD7D0', 
-                              },
-                            }}}
-            InputProps={{readOnly: edit? true: false, sx:{color: '#9A968C'}}}
+            InputLabelProps={{
+              sx: {
+                color: '#9A968C',
+                '&.MuiInputLabel-shrink': { color: '#CDD7D0' },
+              },
+            }}
+            InputProps={{ readOnly: edit ? true : false, sx: { color: '#9A968C' } }}
             onChange={(e) => setSearchQuery(e.target.value)}
             error={errors.searchQuery}
             helperText={errors.searchQuery ? "Enter an Item" : ""}
-            sx={{ width: "60%", marginLeft: "10px", backgroundColor:"#202922",  borderRadius: 1.5  }}
+            sx={{ width: "60%", marginLeft: "10px", backgroundColor: "#202922", borderRadius: 1.5 }}
           />
           <TextField
             id="outlined-required"
             select
             size="small"
             label="Food Group"
-            InputLabelProps={{ shrink: true, sx:{color:"#CDD7D0"} }}
-            InputProps={{sx:{color: '#9A968C'}}}
+            InputLabelProps={{ shrink: true, sx: { color: "#CDD7D0" } }}
+            InputProps={{ sx: { color: '#9A968C' } }}
             defaultValue="Protein"
             error={errors.foodGroup}
             helperText={errors.foodGroup ? "Select a Food Group" : ""}
-            sx={{ width: "30%", backgroundColor: "#202922",  borderRadius: 1.5 }}
+            sx={{ width: "30%", backgroundColor: "#202922", borderRadius: 1.5 }}
             value={foodGroup}
             onChange={(e) => setFoodGroup(e.target.value)}
           >
@@ -131,49 +154,31 @@ export default function EntryBox({ onClose, selectedValue, open, searchQuery,
           </TextField>
         </Box>
 
-        <Box
-          sx={{
-            marginTop: "20px",
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "column"
-
-          }}>
-
-
-<Box sx={{ 
-            marginTop: "25px",
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "row"
-          }}>
-
+        <Box sx={{ marginTop: "20px", display: "flex", justifyContent: "center", flexDirection: "column" }}>
+          <Box sx={{ marginTop: "25px", display: "flex", justifyContent: "center", flexDirection: "row" }}>
             <TextField
-
               id="outlined-required"
               label="Amount"
               placeholder="0"
               size="small"
               type="text"
               value={amount}
-              InputLabelProps={{ shrink: true, sx:{color:"#CDD7D0"}}}
-              inputProps={{ maxLength: 6, inputMode: "numeric", pattern: "[0-9]*", sx:{color: '#9A968C'}}}
+              InputLabelProps={{ shrink: true, sx: { color: "#CDD7D0" } }}
+              inputProps={{ maxLength: 6, inputMode: "numeric", pattern: "[0-9]*", sx: { color: '#9A968C' } }}
               onChange={(e) => setAmount(e.target.value.replace(/\D/g, ''))}
-              sx={{ width: "20%", marginLeft: "10px", backgroundColor:"#202922",  borderRadius: 1.5 }}
+              sx={{ width: "20%", marginLeft: "10px", backgroundColor: "#202922", borderRadius: 1.5 }}
             />
-
             <TextField
               id="outlined-required"
               select
               size="small"
               label="Units"
               defaultValue="g"
-              sx={{ width: "15%", backgroundColor:"#202922",  borderRadius: 1.5 }}
-              InputLabelProps={{ shrink: true, sx:{color:"#CDD7D0"}}}
-              InputProps={{sx:{color: '#9A968C'}}}
+              sx={{ width: "15%", backgroundColor: "#202922", borderRadius: 1.5 }}
+              InputLabelProps={{ shrink: true, sx: { color: "#CDD7D0" } }}
+              InputProps={{ sx: { color: '#9A968C' } }}
               value={unit}
               onChange={(e) => setUnit(e.target.value)}
-              
             >
               {amounts.map((option2) => (
                 <MenuItem key={option2} value={option2}>
@@ -184,93 +189,94 @@ export default function EntryBox({ onClose, selectedValue, open, searchQuery,
           </Box>
           <Box
             sx={{
-              marginTop:"25px",
+              marginTop: "25px",
               display: "flex",
               justifyContent: "center",
-              flexDirection: "row"}}>
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+          >
+           
             <TextField
-
-              id="outlined-required"
-              label="Day"
-              size="small"
-              placeholder="Expiry"
-              type="text"
-              InputLabelProps={{ shrink: true, sx:{color:"#CDD7D0"}}}
-              inputProps={{ maxLength: 2, inputMode: "numeric", pattern: "[0-9]*", sx:{color: '#9A968C'}}}
-              value={day}
-              error={errors.day}
-              helperText={errors.day ? "Invalid Day" : ""}
-              onChange={(e) => setDay(e.target.value.replace(/\D/g, ''))} // Optional: auto-remove non-digits
-              // value={searchQuery}
-              // onChange={(e) => setSearchQuery(e.target.value)}
-              sx={{ width: "15%", marginLeft: "10px", backgroundColor:"#202922",  borderRadius: 1.5 }}
-            />
-
-
-            <TextField
-
+              inputRef={monthRef}
               id="outlined-required"
               label="Month"
               size="small"
+              placeholder="MM"
               type="text"
-              InputLabelProps={{ shrink: true, sx:{color:"#CDD7D0"}}}
-              inputProps={{ maxLength: 2, inputMode: "numeric", pattern: "[0-9]*", sx:{color: '#9A968C'} }}
+              InputLabelProps={{ shrink: true, sx: { color: "#CDD7D0" } }}
+              inputProps={{ maxLength: 2, inputMode: "numeric", pattern: "[0-9]*", sx: { color: '#9A968C', textAlign: 'center' } }}
               value={month}
-              onChange={(e) => setMonth(e.target.value.replace(/\D/g, ''))}
               error={errors.month}
-              helperText={errors.month ? "Invalid Month" : ""}
-              sx={{ width: "15%", marginLeft: "10px", backgroundColor:"#202922",  borderRadius: 1.5 }}
+              helperText={errors.month ? "Invalid Month (1-12)" : ""}
+              onChange={(e) => setMonth(e.target.value.replace(/\D/g, ''))}
+              onKeyDown={(e) => handleKeyDown(e, 'month')}
+              sx={{ width: "15%", marginLeft: "10px", backgroundColor: "#202922", borderRadius: 1.5 }}
             />
+            <Typography sx={{ color: "#CDD7D0", mx: 1 }}>/</Typography>
+             <TextField
+              inputRef={dayRef}
+              id="outlined-required"
+              label="Day"
+              size="small"
+              placeholder="DD"
+              type="text"
+              InputLabelProps={{ shrink: true, sx: { color: "#CDD7D0" } }}
+              inputProps={{ maxLength: 2, inputMode: "numeric", pattern: "[0-9]*", sx: { color: '#9A968C', textAlign: 'center' } }}
+              value={day}
+              error={errors.day}
+              helperText={errors.day ? "Invalid Day (1-31)" : ""}
+              onChange={(e) => setDay(e.target.value.replace(/\D/g, ''))}
+              onKeyDown={(e) => handleKeyDown(e, 'day')}
+              sx={{ width: "15%", marginLeft: "10px", backgroundColor: "#202922", borderRadius: 1.5 }}
+            />
+            <Typography sx={{ color: "#CDD7D0", mx: 1 }}>/</Typography>
             <TextField
-
+              inputRef={yearRef}
               id="outlined-required"
               label="Year"
               size="small"
+              placeholder="YYYY"
               type="text"
-              InputLabelProps={{ shrink: true, sx:{color:"#CDD7D0"}}}
-              inputProps={{ maxLength: 4, inputMode: "numeric", pattern: "[0-9]*", sx:{color: '#9A968C'} }}
+              InputLabelProps={{ shrink: true, sx: { color: "#CDD7D0" } }}
+              inputProps={{ maxLength: 4, inputMode: "numeric", pattern: "[0-9]*", sx: { color: '#9A968C', textAlign: 'center' } }}
               value={year}
-              onChange={(e) => setYear(e.target.value.replace(/\D/g, ''))}
               error={errors.year}
-              helperText={errors.year ? "Invalid Year" : ""}
-              sx={{ width: "20%", marginLeft: "10px", backgroundColor:"#202922",  borderRadius: 1.5 }}
+              helperText={errors.year ? "Invalid Year (≥2025)" : ""}
+              onChange={(e) => setYear(e.target.value.replace(/\D/g, ''))}
+              onKeyDown={(e) => handleKeyDown(e, 'year')}
+              sx={{ width: "20%", marginLeft: "10px", backgroundColor: "#202922", borderRadius: 1.5 }}
             />
-
           </Box>
-          
           <Box
-          sx={{            
-            marginTop: "25px",
-            marginBottom:"10px",
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "row"}}>
-          <Button
-          variant="contained"
-          onClick={() => {
-            if (searchQuery.trim() !== "") {
-              handleSubmit();
-            } else {
-              console.log("Search query is empty. No item added.");
-            }
-          }}
-          sx={{
-            width:"10%",
-            backgroundColor: '#31473A', // Button color
-            '&:hover': {
-              backgroundColor: '#388e3c', // Button color on hover
-            },
-          }}
-        >
-          {edit ? 'Save' : 'Add'}
-        </Button>
+            sx={{
+              marginTop: "25px",
+              marginBottom: "10px",
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "row",
+            }}
+          >
+            <Button
+              variant="contained"
+              onClick={() => {
+                if (searchQuery.trim() !== "") {
+                  handleSubmit();
+                } else {
+                  console.log("Search query is empty. No item added.");
+                }
+              }}
+              sx={{
+                width: "10%",
+                backgroundColor: '#31473A',
+                '&:hover': { backgroundColor: '#388e3c' },
+              }}
+            >
+              {edit ? 'Save' : 'Add'}
+            </Button>
+          </Box>
         </Box>
-          
-        </Box>
-
       </Box>
     </Dialog>
-
   );
 }
-

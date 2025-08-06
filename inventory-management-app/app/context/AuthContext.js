@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useContext, createContext, useState, useEffect } from "react";
 import {
   signInWithPopup,
@@ -14,14 +14,14 @@ const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   const googleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     const result = await signInWithPopup(auth, provider);
     
     const userPantry = doc(db, 'users', result.user.uid);
-    setDoc(userPantry, {}, { merge: true });
-    
+    await setDoc(userPantry, {}, { merge: true });
   };
 
   const logOut = () => {
@@ -31,12 +31,13 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      setLoading(false); 
     });
     return () => unsubscribe();
-  }, [user]);
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, googleSignIn, logOut }}>
+    <AuthContext.Provider value={{ user, loading, googleSignIn, logOut }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase/firebase';
-import { collection, query, getDocs, doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
+import { collection, query, getDocs, doc, getDoc, setDoc, deleteDoc,serverTimestamp, orderBy } from 'firebase/firestore';
 import { UserAuth } from "../context/AuthContext";
 
 export function useRecipes() {
@@ -11,7 +11,10 @@ export function useRecipes() {
     if (!user) return;
 
     const recipesRef = collection(db, 'users', user.uid, 'recipes');
-    const recipeSnap = await getDocs(recipesRef);
+    const q = query(recipesRef, orderBy("timestamp", "desc")); // "desc" = newest first
+
+    const recipeSnap = await getDocs(q);
+
   
     const recipesList = recipeSnap.docs.map(doc => ({
       name: doc.id,
@@ -29,7 +32,7 @@ export function useRecipes() {
   if (!user) return;
 
   const itemRef = doc(db, 'users', user.uid, 'recipes', title);
-  await setDoc(itemRef, {title: title,  ingredients:ingredients, instructions:instructions });
+  await setDoc(itemRef, {title: title,  ingredients:ingredients, instructions:instructions, timestamp: serverTimestamp()  });
 
   fetchRecipes();
 };
