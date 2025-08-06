@@ -5,13 +5,21 @@ import admin from 'firebase-admin';
 
 config(); // Load environment variables
 
-// Initialize Firebase Admin SDK
+// Safe Firebase Admin SDK initialization
 if (!admin.apps.length) {
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const privateKey = process.env.FIREBASE_PRIVATE_KEY;
+
+  if (!projectId || !clientEmail || !privateKey) {
+    throw new Error("Missing Firebase Admin credentials in environment variables.");
+  }
+
   admin.initializeApp({
     credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      projectId,
+      clientEmail,
+      privateKey: privateKey.replace(/\\n/g, '\n'),
     }),
   });
 }
@@ -20,19 +28,18 @@ const db = admin.firestore();
 
 export async function POST(request) {
   try {
-    // Extract and verify the idToken
+    // Verify ID token
     const authHeader = request.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json({ error: "Missing or invalid Authorization header" }, { status: 401 });
     }
+
     const idToken = authHeader.split('Bearer ')[1];
     const decodedToken = await admin.auth().verifyIdToken(idToken);
-    const userId = decodedToken.uid; // This is user.uid
-    console.log("Authenticated user ID:", userId);
+    const userId = decodedToken.uid;
 
-    // Get pantry items from request
+    // Extract pantry items from request
     const { pantryItems } = await request.json();
-    console.log("Received pantryItems:", pantryItems);
 
     if (!pantryItems || pantryItems.length === 0) {
       return NextResponse.json({ error: "No pantry items provided" }, { status: 400 });
@@ -43,14 +50,12 @@ export async function POST(request) {
       return NextResponse.json({ error: "GEMINI_API_KEY is not set" }, { status: 500 });
     }
 
-    // Fetch existing recipe titles from Firestore
+    // Fetch existing recipe titles to avoid duplicates
     const recipesRef = db.collection('users').doc(userId).collection('recipes');
     const snapshot = await recipesRef.get();
-    const existingTitles = snapshot.docs.map(doc => doc.data().title.toLowerCase());
-    console.log("Existing recipe titles:", existingTitles);
+    const existingTitles = snapshot.docs.map(doc => doc.data().title?.toLowerCase?.() ?? '');
 
-    // Update prompt to avoid duplicates
-    const prompt = `Generate a detailed recipe using only these ingredients: ${pantryItems.join(", ")}. Include common pantry staples like any spices, seasonings, salt, pepper, oil, and water if needed. Provide a title, ingredients list, and detailed step-by-step instructions. Format the response with clear sections: 'Title:', 'Ingredients:', and 'Instructions:' followed by the respective content. Limit is a max of 20 characters for the title. Ensure the recipe is not of similar cuisine or recipe to the following titles, try unique cuisines: ${existingTitles.join(", ") || 'none'}.`;
+    const prompt = `Generate a detailed recipe using only these ingredients: ${pantryItems.join(", ")}. Include common pantry staples like spices, salt, pepper, oil, and water. Format response as: 'Title:', 'Ingredients:', 'Instructions:'. Ensure it's unique from: ${existingTitles.join(", ") || 'none'}. Title max 20 characters.`;
 
     const response = await axios.post(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
@@ -63,40 +68,38 @@ export async function POST(request) {
       return NextResponse.json({ error: "No recipe generated" }, { status: 500 });
     }
 
-    // Parse the recipe (unchanged from your code)
+    // Parse recipe
     const formattedRecipe = { title: '', ingredients: [], instructions: [] };
-    const lines = rawRecipe.split('\n').map(line => line.trim()).filter(line => line);
+    const lines = rawRecipe.split('\n').map(line => line.trim()).filter(Boolean);
     let currentSection = null;
 
-    lines.forEach(line => {
+    for (const line of lines) {
       if (!currentSection && line.match(/\*\*Title:\*\*/i)) {
         formattedRecipe.title = line.replace(/\*\*Title:\*\*/i, '').trim() || 'Untitled Recipe';
       } else if (line.match(/\*\*Ingredients:\*\*/i)) {
         currentSection = 'ingredients';
       } else if (line.match(/\*\*Instructions:\*\*/i)) {
         currentSection = 'instructions';
-      } else if (currentSection) {
-        if (currentSection === 'ingredients' && line.match(/^\*\s+/)) {
-          formattedRecipe.ingredients.push(line.replace(/^\*\s+/, '').trim());
-        } else if (currentSection === 'instructions' && line.match(/^\d+\.\s+/)) {
-          formattedRecipe.instructions.push(line.replace(/^\d+\.\s+/, '').trim());
-        }
+      } else if (currentSection === 'ingredients' && line.match(/^\*\s+/)) {
+        formattedRecipe.ingredients.push(line.replace(/^\*\s+/, '').trim());
+      } else if (currentSection === 'instructions' && line.match(/^\d+\.\s+/)) {
+        formattedRecipe.instructions.push(line.replace(/^\d+\.\s+/, '').trim());
       }
-    });
+    }
 
-    // Fallbacks
     if (!formattedRecipe.title) formattedRecipe.title = 'Generated Recipe';
-    if (formattedRecipe.ingredients.length === 0) formattedRecipe.ingredients = ['No ingredients listed'];
-    if (formattedRecipe.instructions.length === 0) formattedRecipe.instructions = ['No instructions available'];
+    if (formattedRecipe.ingredients.length === 0) formattedRecipe.ingredients.push('No ingredients listed');
+    if (formattedRecipe.instructions.length === 0) formattedRecipe.instructions.push('No instructions available');
 
-    // Check for duplicates
+    // Final duplicate title check
     if (existingTitles.includes(formattedRecipe.title.toLowerCase())) {
       return NextResponse.json({ error: "Duplicate recipe title generated" }, { status: 400 });
     }
 
     return NextResponse.json({ recipe: formattedRecipe });
+
   } catch (error) {
-    console.error("Error in /api/recipes:", error.message);
+    console.error("Error in /api/recipes:", error);
     return NextResponse.json({ error: `Failed to generate recipe: ${error.message}` }, { status: 500 });
   }
 }
